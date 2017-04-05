@@ -35,8 +35,6 @@ struct Packet {
     #[serde(with = "serde_bytes")]
     payload: Vec<u8>,
 }
-#
-# fn main() {}
 ```
 
 Rust support for specialization is being tracked in [rust-lang/rust#31844].
