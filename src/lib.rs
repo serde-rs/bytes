@@ -61,6 +61,7 @@ extern crate collections;
 #[cfg(feature = "collections")]
 use collections::Vec;
 
+#[macro_use]
 extern crate serde;
 use serde::ser::{Serialize, Serializer};
 #[cfg(any(feature = "std", feature = "collections"))]
@@ -68,6 +69,8 @@ use serde::de::{Deserialize, Deserializer};
 
 #[cfg(any(feature = "std", feature = "collections"))]
 pub use self::bytebuf::ByteBuf;
+
+mod value;
 
 //////////////////////////////////////////////////////////////////////////////
 

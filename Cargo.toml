@@ -18,7 +18,7 @@ std = ["serde/std"]
 collections = ["serde/collections"]
 
 [dependencies]
-serde = "0.9"
+serde = { version = "0.9", default-features = false }
 
 [dev-dependencies]
 bincode = "=1.0.0-alpha6"
