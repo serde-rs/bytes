@@ -12,7 +12,7 @@ use collections::Vec;
 
 //////////////////////////////////////////////////////////////////////////////
 
-impl<'a, E> ValueDeserializer<E> for super::Bytes<'a>
+impl<'de, 'a, E> ValueDeserializer<'de, E> for super::Bytes<'a>
     where E: Error
 {
     type Deserializer = BytesDeserializer<'a, E>;
@@ -31,13 +31,13 @@ pub struct BytesDeserializer<'a, E> {
     error: PhantomData<E>,
 }
 
-impl<'a, E> Deserializer for BytesDeserializer<'a, E>
+impl<'de, 'a, E> Deserializer<'de> for BytesDeserializer<'a, E>
     where E: Error
 {
     type Error = E;
 
     fn deserialize<V>(self, visitor: V) -> Result<V::Value, Self::Error>
-        where V: Visitor
+        where V: Visitor<'de>
     {
         visitor.visit_bytes(self.value)
     }
@@ -52,7 +52,7 @@ impl<'a, E> Deserializer for BytesDeserializer<'a, E>
 //////////////////////////////////////////////////////////////////////////////
 
 #[cfg(any(feature = "std", feature = "collections"))]
-impl<E> ValueDeserializer<E> for super::ByteBuf
+impl<'de, E> ValueDeserializer<'de, E> for super::ByteBuf
     where E: Error
 {
     type Deserializer = ByteBufDeserializer<E>;
@@ -73,13 +73,13 @@ pub struct ByteBufDeserializer<E> {
 }
 
 #[cfg(any(feature = "std", feature = "collections"))]
-impl<E> Deserializer for ByteBufDeserializer<E>
+impl<'de, E> Deserializer<'de> for ByteBufDeserializer<E>
     where E: Error
 {
     type Error = E;
 
     fn deserialize<V>(self, visitor: V) -> Result<V::Value, Self::Error>
-        where V: Visitor
+        where V: Visitor<'de>
     {
         visitor.visit_byte_buf(self.value)
     }
