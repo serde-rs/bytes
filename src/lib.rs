@@ -141,7 +141,7 @@ pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
 /// Wrapper around `&[u8]` to serialize efficiently. Does not support
 /// deserialization.
 ///
-/// ```rust
+/// ```rust,ignore
 /// extern crate bincode;
 /// extern crate serde_bytes;
 ///
@@ -230,7 +230,7 @@ mod bytebuf {
 
     /// Wrapper around `Vec<u8>` to serialize and deserialize efficiently.
     ///
-    /// ```rust
+    /// ```rust,ignore
     /// extern crate bincode;
     /// extern crate serde_bytes;
     ///

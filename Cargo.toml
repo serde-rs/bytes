@@ -23,5 +23,5 @@ serde = { git = "https://github.com/serde-rs/serde", branch = "1.0", default-fea
 
 [dev-dependencies]
 bincode = "=1.0.0-alpha6"
-serde_derive = "0.9"
-serde_test = "0.9"
+serde_derive = { git = "https://github.com/serde-rs/serde", branch = "1.0" }
+serde_test = { git = "https://github.com/serde-rs/serde", branch = "1.0" }

@@ -45,7 +45,7 @@ impl<'de, 'a, E> Deserializer<'de> for BytesDeserializer<'a, E>
     forward_to_deserialize! {
         bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
         seq seq_fixed_size bytes map unit_struct newtype_struct tuple_struct
-        struct struct_field tuple enum ignored_any byte_buf
+        struct identifier tuple enum ignored_any byte_buf
     }
 }
 
@@ -87,6 +87,6 @@ impl<'de, E> Deserializer<'de> for ByteBufDeserializer<E>
     forward_to_deserialize! {
         bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
         seq seq_fixed_size bytes map unit_struct newtype_struct tuple_struct
-        struct struct_field tuple enum ignored_any byte_buf
+        struct identifier tuple enum ignored_any byte_buf
     }
 }
