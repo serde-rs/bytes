@@ -1,5 +1,4 @@
-use serde::de::{Deserializer, Visitor, Error};
-use serde::de::value::ValueDeserializer;
+use serde::de::{Deserializer, IntoDeserializer, Visitor, Error};
 
 #[cfg(feature = "std")]
 use std::marker::PhantomData;
@@ -12,7 +11,7 @@ use collections::Vec;
 
 //////////////////////////////////////////////////////////////////////////////
 
-impl<'de, 'a, E> ValueDeserializer<'de, E> for super::Bytes<'a>
+impl<'de, 'a, E> IntoDeserializer<'de, E> for super::Bytes<'a>
     where E: Error
 {
     type Deserializer = BytesDeserializer<'a, E>;
@@ -52,7 +51,7 @@ impl<'de, 'a, E> Deserializer<'de> for BytesDeserializer<'a, E>
 //////////////////////////////////////////////////////////////////////////////
 
 #[cfg(any(feature = "std", feature = "collections"))]
-impl<'de, E> ValueDeserializer<'de, E> for super::ByteBuf
+impl<'de, E> IntoDeserializer<'de, E> for super::ByteBuf
     where E: Error
 {
     type Deserializer = ByteBufDeserializer<E>;
