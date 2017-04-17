@@ -226,7 +226,7 @@ mod bytebuf {
     use collections::{String, Vec};
 
     use serde::ser::{Serialize, Serializer};
-    use serde::de::{Deserialize, Deserializer, Visitor, SeqVisitor, Error};
+    use serde::de::{Deserialize, Deserializer, Visitor, SeqAccess, Error};
 
     /// Wrapper around `Vec<u8>` to serialize and deserialize efficiently.
     ///
@@ -354,12 +354,12 @@ mod bytebuf {
 
         #[inline]
         fn visit_seq<V>(self, mut visitor: V) -> Result<ByteBuf, V::Error>
-            where V: SeqVisitor<'de>
+            where V: SeqAccess<'de>
         {
-            let len = cmp::min(visitor.size_hint().0, 4096);
+            let len = cmp::min(visitor.size_hint().unwrap_or(0), 4096);
             let mut values = Vec::with_capacity(len);
 
-            while let Some(value) = try!(visitor.visit()) {
+            while let Some(value) = try!(visitor.next_element()) {
                 values.push(value);
             }
 

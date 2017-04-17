@@ -35,16 +35,16 @@ impl<'de, 'a, E> Deserializer<'de> for BytesDeserializer<'a, E>
 {
     type Error = E;
 
-    fn deserialize<V>(self, visitor: V) -> Result<V::Value, Self::Error>
+    fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error>
         where V: Visitor<'de>
     {
         visitor.visit_bytes(self.value)
     }
 
-    forward_to_deserialize! {
-        bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
-        seq seq_fixed_size bytes map unit_struct newtype_struct tuple_struct
-        struct identifier tuple enum ignored_any byte_buf
+    forward_to_deserialize_any! {
+        bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes
+        byte_buf option unit unit_struct newtype_struct seq tuple
+        tuple_struct map struct enum identifier ignored_any
     }
 }
 
@@ -77,15 +77,15 @@ impl<'de, E> Deserializer<'de> for ByteBufDeserializer<E>
 {
     type Error = E;
 
-    fn deserialize<V>(self, visitor: V) -> Result<V::Value, Self::Error>
+    fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error>
         where V: Visitor<'de>
     {
         visitor.visit_byte_buf(self.value)
     }
 
-    forward_to_deserialize! {
-        bool u8 u16 u32 u64 i8 i16 i32 i64 f32 f64 char str string unit option
-        seq seq_fixed_size bytes map unit_struct newtype_struct tuple_struct
-        struct identifier tuple enum ignored_any byte_buf
+    forward_to_deserialize_any! {
+        bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes
+        byte_buf option unit unit_struct newtype_struct seq tuple
+        tuple_struct map struct enum identifier ignored_any
     }
 }
