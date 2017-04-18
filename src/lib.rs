@@ -129,9 +129,9 @@ pub fn serialize<T, S>(bytes: &T, serializer: S) -> Result<S::Ok, S::Error>
 /// # fn main() {}
 /// ```
 #[cfg(any(feature = "std", feature = "collections"))]
-pub fn deserialize<T, D>(deserializer: D) -> Result<T, D::Error>
+pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
     where T: From<Vec<u8>>,
-          D: Deserializer
+          D: Deserializer<'de>
 {
     ByteBuf::deserialize(deserializer).map(|buf| Into::<Vec<u8>>::into(buf).into())
 }
@@ -141,7 +141,7 @@ pub fn deserialize<T, D>(deserializer: D) -> Result<T, D::Error>
 /// Wrapper around `&[u8]` to serialize efficiently. Does not support
 /// deserialization.
 ///
-/// ```rust
+/// ```rust,ignore
 /// extern crate bincode;
 /// extern crate serde_bytes;
 ///
@@ -226,11 +226,11 @@ mod bytebuf {
     use collections::{String, Vec};
 
     use serde::ser::{Serialize, Serializer};
-    use serde::de::{Deserialize, Deserializer, Visitor, SeqVisitor, Error};
+    use serde::de::{Deserialize, Deserializer, Visitor, SeqAccess, Error};
 
     /// Wrapper around `Vec<u8>` to serialize and deserialize efficiently.
     ///
-    /// ```rust
+    /// ```rust,ignore
     /// extern crate bincode;
     /// extern crate serde_bytes;
     ///
@@ -345,7 +345,7 @@ mod bytebuf {
 
     struct ByteBufVisitor;
 
-    impl Visitor for ByteBufVisitor {
+    impl<'de> Visitor<'de> for ByteBufVisitor {
         type Value = ByteBuf;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -354,12 +354,12 @@ mod bytebuf {
 
         #[inline]
         fn visit_seq<V>(self, mut visitor: V) -> Result<ByteBuf, V::Error>
-            where V: SeqVisitor
+            where V: SeqAccess<'de>
         {
-            let len = cmp::min(visitor.size_hint().0, 4096);
+            let len = cmp::min(visitor.size_hint().unwrap_or(0), 4096);
             let mut values = Vec::with_capacity(len);
 
-            while let Some(value) = try!(visitor.visit()) {
+            while let Some(value) = try!(visitor.next_element()) {
                 values.push(value);
             }
 
@@ -395,10 +395,10 @@ mod bytebuf {
         }
     }
 
-    impl Deserialize for ByteBuf {
+    impl<'de> Deserialize<'de> for ByteBuf {
         #[inline]
         fn deserialize<D>(deserializer: D) -> Result<ByteBuf, D::Error>
-            where D: Deserializer
+            where D: Deserializer<'de>
         {
             deserializer.deserialize_byte_buf(ByteBufVisitor)
         }

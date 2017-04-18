@@ -11,6 +11,7 @@ keywords = ["serde", "serialization", "no_std"]
 categories = ["encoding"]
 readme = "README.md"
 include = ["Cargo.toml", "src/**/*.rs", "README.md", "LICENSE-APACHE", "LICENSE-MIT"]
+publish = false # this branch contains breaking changes
 
 [features]
 default = ["std"]
@@ -18,9 +19,9 @@ std = ["serde/std"]
 collections = ["serde/collections"]
 
 [dependencies]
-serde = { version = "0.9", default-features = false }
+serde = { git = "https://github.com/serde-rs/serde", branch = "1.0", default-features = false }
 
 [dev-dependencies]
 bincode = "=1.0.0-alpha6"
-serde_derive = "0.9"
-serde_test = "0.9"
+serde_derive = { git = "https://github.com/serde-rs/serde", branch = "1.0" }
+serde_test = { git = "https://github.com/serde-rs/serde", branch = "1.0" }
