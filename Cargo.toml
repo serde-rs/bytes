@@ -1,6 +1,6 @@
 [package]
 name = "serde_bytes"
-version = "0.9.0"
+version = "0.9.0" # remember to update html_root_url
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 license = "MIT/Apache-2.0"
 description = "Optimized handling of `&[u8]` and `Vec<u8>` for Serde"
@@ -11,7 +11,6 @@ keywords = ["serde", "serialization", "no_std"]
 categories = ["encoding"]
 readme = "README.md"
 include = ["Cargo.toml", "src/**/*.rs", "README.md", "LICENSE-APACHE", "LICENSE-MIT"]
-publish = false # this branch contains breaking changes
 
 [features]
 default = ["std"]
