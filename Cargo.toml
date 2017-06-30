@@ -15,7 +15,7 @@ include = ["Cargo.toml", "src/**/*.rs", "README.md", "LICENSE-APACHE", "LICENSE-
 [features]
 default = ["std"]
 std = ["serde/std"]
-collections = ["serde/collections"]
+alloc = ["serde/alloc"]
 
 [dependencies]
 serde = { version = "1.0", default-features = false }

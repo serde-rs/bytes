@@ -45,7 +45,7 @@
 
 #![doc(html_root_url = "https://docs.rs/serde_bytes/0.10.0")]
 #![cfg_attr(not(feature = "std"), no_std)]
-#![cfg_attr(feature = "collections", feature(collections))]
+#![cfg_attr(feature = "alloc", feature(alloc))]
 #![deny(missing_docs)]
 
 #[cfg(feature = "std")]
@@ -56,18 +56,18 @@ use core::{fmt, ops};
 
 use self::fmt::Debug;
 
-#[cfg(feature = "collections")]
-extern crate collections;
-#[cfg(feature = "collections")]
-use collections::Vec;
+#[cfg(feature = "alloc")]
+extern crate alloc;
+#[cfg(feature = "alloc")]
+use alloc::Vec;
 
 #[macro_use]
 extern crate serde;
 use serde::ser::{Serialize, Serializer};
-#[cfg(any(feature = "std", feature = "collections"))]
+#[cfg(any(feature = "std", feature = "alloc"))]
 use serde::de::{Deserialize, Deserializer};
 
-#[cfg(any(feature = "std", feature = "collections"))]
+#[cfg(any(feature = "std", feature = "alloc"))]
 pub use self::bytebuf::ByteBuf;
 
 mod value;
@@ -128,7 +128,7 @@ pub fn serialize<T, S>(bytes: &T, serializer: S) -> Result<S::Ok, S::Error>
 /// #
 /// # fn main() {}
 /// ```
-#[cfg(any(feature = "std", feature = "collections"))]
+#[cfg(any(feature = "std", feature = "alloc"))]
 pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
     where T: From<Vec<u8>>,
           D: Deserializer<'de>
@@ -212,7 +212,7 @@ impl<'a> Serialize for Bytes<'a> {
 
 //////////////////////////////////////////////////////////////////////////////
 
-#[cfg(any(feature = "std", feature = "collections"))]
+#[cfg(any(feature = "std", feature = "alloc"))]
 mod bytebuf {
     #[cfg(feature = "std")]
     use std::{cmp, fmt, ops};
@@ -222,8 +222,8 @@ mod bytebuf {
 
     use self::fmt::Debug;
 
-    #[cfg(feature = "collections")]
-    use collections::{String, Vec};
+    #[cfg(feature = "alloc")]
+    use alloc::{String, Vec};
 
     use serde::ser::{Serialize, Serializer};
     use serde::de::{Deserialize, Deserializer, Visitor, SeqAccess, Error};

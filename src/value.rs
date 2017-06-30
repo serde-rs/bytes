@@ -6,8 +6,8 @@ use std::marker::PhantomData;
 #[cfg(not(feature = "std"))]
 use core::marker::PhantomData;
 
-#[cfg(feature = "collections")]
-use collections::Vec;
+#[cfg(feature = "alloc")]
+use alloc::Vec;
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -50,7 +50,7 @@ impl<'de, 'a, E> Deserializer<'de> for BytesDeserializer<'a, E>
 
 //////////////////////////////////////////////////////////////////////////////
 
-#[cfg(any(feature = "std", feature = "collections"))]
+#[cfg(any(feature = "std", feature = "alloc"))]
 impl<'de, E> IntoDeserializer<'de, E> for super::ByteBuf
     where E: Error
 {
@@ -65,13 +65,13 @@ impl<'de, E> IntoDeserializer<'de, E> for super::ByteBuf
 }
 
 /// A deserializer that deserializes a `Vec<u8>`.
-#[cfg(any(feature = "std", feature = "collections"))]
+#[cfg(any(feature = "std", feature = "alloc"))]
 pub struct ByteBufDeserializer<E> {
     value: Vec<u8>,
     error: PhantomData<E>,
 }
 
-#[cfg(any(feature = "std", feature = "collections"))]
+#[cfg(any(feature = "std", feature = "alloc"))]
 impl<'de, E> Deserializer<'de> for ByteBufDeserializer<E>
     where E: Error
 {
