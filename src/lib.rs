@@ -64,8 +64,7 @@ use alloc::Vec;
 #[macro_use]
 extern crate serde;
 use serde::ser::{Serialize, Serializer};
-#[cfg(any(feature = "std", feature = "alloc"))]
-use serde::de::{Deserialize, Deserializer};
+use serde::de::{Deserialize, Deserializer, Visitor, Error};
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub use self::bytebuf::ByteBuf;
@@ -138,8 +137,7 @@ pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
 
 //////////////////////////////////////////////////////////////////////////////
 
-/// Wrapper around `&[u8]` to serialize efficiently. Does not support
-/// deserialization.
+/// Wrapper around `&[u8]` to serialize and deserialize efficiently.
 ///
 /// ```rust
 /// extern crate bincode;
@@ -207,6 +205,39 @@ impl<'a> Serialize for Bytes<'a> {
         where S: Serializer
     {
         serializer.serialize_bytes(self.bytes)
+    }
+}
+
+struct BytesVisitor;
+
+impl<'de> Visitor<'de> for BytesVisitor {
+    type Value = Bytes<'de>;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        formatter.write_str("byte array")
+    }
+
+    #[inline]
+    fn visit_borrowed_bytes<E>(self, v: &'de [u8]) -> Result<Bytes<'de>, E>
+        where E: Error
+    {
+        Ok(Bytes::from(v))
+    }
+
+    #[inline]
+    fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Bytes<'de>, E>
+        where E: Error
+    {
+        Ok(Bytes::from(v.as_bytes()))
+    }
+}
+
+impl<'a, 'de: 'a> Deserialize<'de> for Bytes<'a> {
+    #[inline]
+    fn deserialize<D>(deserializer: D) -> Result<Bytes<'a>, D::Error>
+        where D: Deserializer<'de>
+    {
+        deserializer.deserialize_bytes(BytesVisitor)
     }
 }
 
