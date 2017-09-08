@@ -214,7 +214,7 @@ impl<'de> Visitor<'de> for BytesVisitor {
     type Value = Bytes<'de>;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        formatter.write_str("byte array")
+        formatter.write_str("a borrowed byte array")
     }
 
     #[inline]
