@@ -43,7 +43,7 @@
 //!
 //! [rust-lang/rust#31844]: https://github.com/rust-lang/rust/issues/31844
 
-#![doc(html_root_url = "https://docs.rs/serde_bytes/0.10.1")]
+#![doc(html_root_url = "https://docs.rs/serde_bytes/0.10.2")]
 #![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(feature = "alloc", feature(alloc))]
 #![deny(missing_docs)]
