@@ -57,8 +57,8 @@ use alloc::Vec;
 
 #[macro_use]
 extern crate serde;
+use serde::de::{Deserialize, Deserializer, Error, Visitor};
 use serde::ser::{Serialize, Serializer};
-use serde::de::{Deserialize, Deserializer, Visitor, Error};
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub use self::bytebuf::ByteBuf;
@@ -93,8 +93,9 @@ mod value;
 /// # fn main() {}
 /// ```
 pub fn serialize<T, S>(bytes: &T, serializer: S) -> Result<S::Ok, S::Error>
-    where T: ?Sized + AsRef<[u8]>,
-          S: Serializer
+where
+    T: ?Sized + AsRef<[u8]>,
+    S: Serializer,
 {
     serializer.serialize_bytes(bytes.as_ref())
 }
@@ -123,8 +124,9 @@ pub fn serialize<T, S>(bytes: &T, serializer: S) -> Result<S::Ok, S::Error>
 /// ```
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
-    where T: From<Vec<u8>>,
-          D: Deserializer<'de>
+where
+    T: From<Vec<u8>>,
+    D: Deserializer<'de>,
 {
     ByteBuf::deserialize(deserializer).map(|buf| Into::<Vec<u8>>::into(buf).into())
 }
@@ -196,7 +198,8 @@ impl<'a> ops::Deref for Bytes<'a> {
 impl<'a> Serialize for Bytes<'a> {
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where S: Serializer
+    where
+        S: Serializer,
     {
         serializer.serialize_bytes(self.bytes)
     }
@@ -213,14 +216,16 @@ impl<'de> Visitor<'de> for BytesVisitor {
 
     #[inline]
     fn visit_borrowed_bytes<E>(self, v: &'de [u8]) -> Result<Bytes<'de>, E>
-        where E: Error
+    where
+        E: Error,
     {
         Ok(Bytes::from(v))
     }
 
     #[inline]
     fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Bytes<'de>, E>
-        where E: Error
+    where
+        E: Error,
     {
         Ok(Bytes::from(v.as_bytes()))
     }
@@ -229,7 +234,8 @@ impl<'de> Visitor<'de> for BytesVisitor {
 impl<'a, 'de: 'a> Deserialize<'de> for Bytes<'a> {
     #[inline]
     fn deserialize<D>(deserializer: D) -> Result<Bytes<'a>, D::Error>
-        where D: Deserializer<'de>
+    where
+        D: Deserializer<'de>,
     {
         deserializer.deserialize_bytes(BytesVisitor)
     }
@@ -250,8 +256,8 @@ mod bytebuf {
     #[cfg(feature = "alloc")]
     use alloc::{String, Vec};
 
+    use serde::de::{Deserialize, Deserializer, Error, SeqAccess, Visitor};
     use serde::ser::{Serialize, Serializer};
-    use serde::de::{Deserialize, Deserializer, Visitor, SeqAccess, Error};
 
     /// Wrapper around `Vec<u8>` to serialize and deserialize efficiently.
     ///
@@ -299,7 +305,9 @@ mod bytebuf {
 
         /// Wrap existing bytes in a `ByteBuf`.
         pub fn from<T: Into<Vec<u8>>>(bytes: T) -> Self {
-            ByteBuf { bytes: bytes.into() }
+            ByteBuf {
+                bytes: bytes.into(),
+            }
         }
     }
 
@@ -362,7 +370,8 @@ mod bytebuf {
     impl Serialize for ByteBuf {
         #[inline]
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-            where S: Serializer
+        where
+            S: Serializer,
         {
             serializer.serialize_bytes(&self.bytes)
         }
@@ -379,7 +388,8 @@ mod bytebuf {
 
         #[inline]
         fn visit_seq<V>(self, mut visitor: V) -> Result<ByteBuf, V::Error>
-            where V: SeqAccess<'de>
+        where
+            V: SeqAccess<'de>,
         {
             let len = cmp::min(visitor.size_hint().unwrap_or(0), 4096);
             let mut values = Vec::with_capacity(len);
@@ -393,28 +403,32 @@ mod bytebuf {
 
         #[inline]
         fn visit_bytes<E>(self, v: &[u8]) -> Result<ByteBuf, E>
-            where E: Error
+        where
+            E: Error,
         {
             Ok(ByteBuf::from(v))
         }
 
         #[inline]
         fn visit_byte_buf<E>(self, v: Vec<u8>) -> Result<ByteBuf, E>
-            where E: Error
+        where
+            E: Error,
         {
             Ok(ByteBuf::from(v))
         }
 
         #[inline]
         fn visit_str<E>(self, v: &str) -> Result<ByteBuf, E>
-            where E: Error
+        where
+            E: Error,
         {
             Ok(ByteBuf::from(v))
         }
 
         #[inline]
         fn visit_string<E>(self, v: String) -> Result<ByteBuf, E>
-            where E: Error
+        where
+            E: Error,
         {
             Ok(ByteBuf::from(v))
         }
@@ -423,7 +437,8 @@ mod bytebuf {
     impl<'de> Deserialize<'de> for ByteBuf {
         #[inline]
         fn deserialize<D>(deserializer: D) -> Result<ByteBuf, D::Error>
-            where D: Deserializer<'de>
+        where
+            D: Deserializer<'de>,
         {
             deserializer.deserialize_byte_buf(ByteBufVisitor)
         }

@@ -1,4 +1,4 @@
-use serde::de::{Deserializer, IntoDeserializer, Visitor, Error};
+use serde::de::{Deserializer, Error, IntoDeserializer, Visitor};
 
 #[cfg(feature = "std")]
 use std::marker::PhantomData;
@@ -12,7 +12,8 @@ use alloc::Vec;
 //////////////////////////////////////////////////////////////////////////////
 
 impl<'de, 'a, E> IntoDeserializer<'de, E> for super::Bytes<'a>
-    where E: Error
+where
+    E: Error,
 {
     type Deserializer = BytesDeserializer<'a, E>;
 
@@ -31,12 +32,14 @@ pub struct BytesDeserializer<'a, E> {
 }
 
 impl<'de, 'a, E> Deserializer<'de> for BytesDeserializer<'a, E>
-    where E: Error
+where
+    E: Error,
 {
     type Error = E;
 
     fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error>
-        where V: Visitor<'de>
+    where
+        V: Visitor<'de>,
     {
         visitor.visit_bytes(self.value)
     }
@@ -52,7 +55,8 @@ impl<'de, 'a, E> Deserializer<'de> for BytesDeserializer<'a, E>
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl<'de, E> IntoDeserializer<'de, E> for super::ByteBuf
-    where E: Error
+where
+    E: Error,
 {
     type Deserializer = ByteBufDeserializer<E>;
 
@@ -73,12 +77,14 @@ pub struct ByteBufDeserializer<E> {
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl<'de, E> Deserializer<'de> for ByteBufDeserializer<E>
-    where E: Error
+where
+    E: Error,
 {
     type Error = E;
 
     fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error>
-        where V: Visitor<'de>
+    where
+        V: Visitor<'de>,
     {
         visitor.visit_byte_buf(self.value)
     }
