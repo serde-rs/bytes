@@ -12,12 +12,9 @@
 //! This crate supports the Serde `with` attribute to enable efficient handling
 //! of `&[u8]` and `Vec<u8>` in structs without needing a wrapper type.
 //!
-//! ```rust
-//! #[macro_use]
-//! extern crate serde_derive;
-//!
-//! extern crate serde;
-//! extern crate serde_bytes;
+//! ```edition2018
+//! # use serde_derive::{Serialize, Deserialize};
+//! use serde::{Serialize, Deserialize};
 //!
 //! #[derive(Serialize)]
 //! struct Efficient<'a> {
@@ -33,8 +30,6 @@
 //!     #[serde(with = "serde_bytes")]
 //!     payload: Vec<u8>,
 //! }
-//! #
-//! # fn main() {}
 //! ```
 
 #![doc(html_root_url = "https://docs.rs/serde_bytes/0.10.4")]
@@ -74,12 +69,9 @@ mod value;
 /// - `#[serde(with = "serde_bytes")]`
 /// - `#[serde(serialize_with = "serde_bytes::serialize")]`
 ///
-/// ```rust
-/// #[macro_use]
-/// extern crate serde_derive;
-///
-/// extern crate serde;
-/// extern crate serde_bytes;
+/// ```edition2018
+/// # use serde_derive::Serialize;
+/// use serde::Serialize;
 ///
 /// #[derive(Serialize)]
 /// struct Efficient<'a> {
@@ -89,8 +81,6 @@ mod value;
 ///     #[serde(with = "serde_bytes")]
 ///     byte_buf: Vec<u8>,
 /// }
-/// #
-/// # fn main() {}
 /// ```
 pub fn serialize<T, S>(bytes: &T, serializer: S) -> Result<S::Ok, S::Error>
 where
@@ -107,20 +97,15 @@ where
 /// - `#[serde(with = "serde_bytes")]`
 /// - `#[serde(deserialize_with = "serde_bytes::deserialize")]`
 ///
-/// ```rust
-/// #[macro_use]
-/// extern crate serde_derive;
-///
-/// extern crate serde;
-/// extern crate serde_bytes;
+/// ```edition2018
+/// # use serde_derive::Deserialize;
+/// use serde::Deserialize;
 ///
 /// #[derive(Deserialize)]
 /// struct Packet {
 ///     #[serde(with = "serde_bytes")]
 ///     payload: Vec<u8>,
 /// }
-/// #
-/// # fn main() {}
 /// ```
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
@@ -135,10 +120,7 @@ where
 
 /// Wrapper around `&[u8]` to serialize and deserialize efficiently.
 ///
-/// ```rust
-/// extern crate bincode;
-/// extern crate serde_bytes;
-///
+/// ```edition2018
 /// use std::collections::HashMap;
 /// use std::io;
 ///
@@ -261,10 +243,7 @@ mod bytebuf {
 
     /// Wrapper around `Vec<u8>` to serialize and deserialize efficiently.
     ///
-    /// ```rust
-    /// extern crate bincode;
-    /// extern crate serde_bytes;
-    ///
+    /// ```edition2018
     /// use std::collections::HashMap;
     /// use std::io;
     ///
