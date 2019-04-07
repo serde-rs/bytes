@@ -1,6 +1,7 @@
 use core::borrow::{Borrow, BorrowMut};
 use core::cmp::{self, Ordering};
 use core::fmt::{self, Debug};
+use core::hash::{Hash, Hasher};
 use core::ops::{Deref, DerefMut};
 
 #[cfg(feature = "alloc")]
@@ -37,7 +38,7 @@ use crate::Bytes;
 /// #     deserialize_bytebufs().unwrap();
 /// # }
 /// ```
-#[derive(Clone, Default, Eq, Hash, Ord)]
+#[derive(Clone, Default, Eq, Ord)]
 pub struct ByteBuf {
     bytes: Vec<u8>,
 }
@@ -125,6 +126,12 @@ where
 {
     fn partial_cmp(&self, other: &Rhs) -> Option<Ordering> {
         self.as_ref().partial_cmp(other.as_ref())
+    }
+}
+
+impl Hash for ByteBuf {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.bytes.hash(state);
     }
 }
 

@@ -1,5 +1,6 @@
 use core::cmp::Ordering;
 use core::fmt::{self, Debug};
+use core::hash::{Hash, Hasher};
 use core::ops::{Deref, DerefMut};
 
 #[cfg(feature = "alloc")]
@@ -32,7 +33,7 @@ use serde::ser::{Serialize, Serializer};
 /// #     print_encoded_cache().unwrap();
 /// # }
 /// ```
-#[derive(Eq, Hash, Ord)]
+#[derive(Eq, Ord)]
 #[repr(C)]
 pub struct Bytes {
     bytes: [u8],
@@ -101,6 +102,12 @@ where
 {
     fn partial_cmp(&self, other: &Rhs) -> Option<Ordering> {
         self.as_ref().partial_cmp(other.as_ref())
+    }
+}
+
+impl Hash for Bytes {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.bytes.hash(state);
     }
 }
 
