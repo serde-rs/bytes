@@ -9,26 +9,21 @@
 //! `&[u8]` by wrapping it in `serde_bytes::Bytes` and `Vec<u8>` by wrapping it
 //! in `serde_bytes::ByteBuf`.
 //!
-//! This crate supports the Serde `with` attribute to enable efficient handling
-//! of `&[u8]` and `Vec<u8>` in structs without needing a wrapper type.
+//! Additionally this crate supports the Serde `with` attribute to enable
+//! efficient handling of `&[u8]` and `Vec<u8>` in structs without needing a
+//! wrapper type.
 //!
 //! ```
-//! # use serde_derive::{Serialize, Deserialize};
-//! use serde::{Serialize, Deserialize};
+//! # use serde_derive::{Deserialize, Serialize};
+//! use serde::{Deserialize, Serialize};
 //!
-//! #[derive(Serialize)]
+//! #[derive(Deserialize, Serialize)]
 //! struct Efficient<'a> {
 //!     #[serde(with = "serde_bytes")]
 //!     bytes: &'a [u8],
 //!
 //!     #[serde(with = "serde_bytes")]
 //!     byte_buf: Vec<u8>,
-//! }
-//!
-//! #[derive(Serialize, Deserialize)]
-//! struct Packet {
-//!     #[serde(with = "serde_bytes")]
-//!     payload: Vec<u8>,
 //! }
 //! ```
 
