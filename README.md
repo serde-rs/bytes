@@ -4,7 +4,7 @@ Wrapper types to enable optimized handling of `&[u8]` and `Vec<u8>`.
 
 ```toml
 [dependencies]
-serde_bytes = "0.10"
+serde_bytes = "0.11"
 ```
 
 ## Explanation
