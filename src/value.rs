@@ -7,7 +7,7 @@ use std::marker::PhantomData;
 use core::marker::PhantomData;
 
 #[cfg(feature = "alloc")]
-use alloc::Vec;
+use alloc::vec::Vec;
 
 //////////////////////////////////////////////////////////////////////////////
 
