@@ -2,6 +2,11 @@
 
 Wrapper types to enable optimized handling of `&[u8]` and `Vec<u8>`.
 
+```toml
+[dependencies]
+serde_bytes = "0.10"
+```
+
 ## Explanation
 
 Without specialization, Rust forces Serde to treat `&[u8]` just like any
