@@ -4,7 +4,6 @@ version = "0.10.5" # remember to update html_root_url
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 license = "MIT OR Apache-2.0"
 description = "Optimized handling of `&[u8]` and `Vec<u8>` for Serde"
-homepage = "https://serde.rs"
 repository = "https://github.com/serde-rs/bytes"
 documentation = "https://docs.serde.rs/serde_bytes/"
 keywords = ["serde", "serialization", "no_std"]
