@@ -2,7 +2,7 @@ sudo: false
 language: rust
 
 rust:
-  - 1.18.0
+  - 1.31.0
   - stable
   - beta
 
@@ -17,7 +17,3 @@ matrix:
         - cargo test
         - cargo check --no-default-features
         - cargo check --no-default-features --features alloc
-    - rust: 1.15.0
-      script:
-        - cargo build
-        - cargo build --no-default-features

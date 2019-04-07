@@ -12,7 +12,7 @@
 //! This crate supports the Serde `with` attribute to enable efficient handling
 //! of `&[u8]` and `Vec<u8>` in structs without needing a wrapper type.
 //!
-//! ```edition2018
+//! ```
 //! # use serde_derive::{Serialize, Deserialize};
 //! use serde::{Serialize, Deserialize};
 //!
@@ -47,11 +47,10 @@ use self::fmt::Debug;
 
 #[cfg(feature = "alloc")]
 extern crate alloc;
+
 #[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
-#[macro_use]
-extern crate serde;
 use serde::de::{Deserialize, Deserializer, Error, Visitor};
 use serde::ser::{Serialize, Serializer};
 
@@ -69,7 +68,7 @@ mod value;
 /// - `#[serde(with = "serde_bytes")]`
 /// - `#[serde(serialize_with = "serde_bytes::serialize")]`
 ///
-/// ```edition2018
+/// ```
 /// # use serde_derive::Serialize;
 /// use serde::Serialize;
 ///
@@ -97,7 +96,7 @@ where
 /// - `#[serde(with = "serde_bytes")]`
 /// - `#[serde(deserialize_with = "serde_bytes::deserialize")]`
 ///
-/// ```edition2018
+/// ```
 /// # use serde_derive::Deserialize;
 /// use serde::Deserialize;
 ///
@@ -120,7 +119,7 @@ where
 
 /// Wrapper around `&[u8]` to serialize and deserialize efficiently.
 ///
-/// ```edition2018
+/// ```
 /// use std::collections::HashMap;
 /// use std::io;
 ///
@@ -245,7 +244,7 @@ mod bytebuf {
 
     /// Wrapper around `Vec<u8>` to serialize and deserialize efficiently.
     ///
-    /// ```edition2018
+    /// ```
     /// use std::collections::HashMap;
     /// use std::io;
     ///
@@ -374,7 +373,7 @@ mod bytebuf {
             let len = cmp::min(visitor.size_hint().unwrap_or(0), 4096);
             let mut values = Vec::with_capacity(len);
 
-            while let Some(value) = try!(visitor.next_element()) {
+            while let Some(value) = visitor.next_element()? {
                 values.push(value);
             }
 

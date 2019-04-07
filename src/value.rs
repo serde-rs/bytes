@@ -1,4 +1,5 @@
 use serde::de::{Deserializer, Error, IntoDeserializer, Visitor};
+use serde::forward_to_deserialize_any;
 
 #[cfg(feature = "std")]
 use std::marker::PhantomData;
