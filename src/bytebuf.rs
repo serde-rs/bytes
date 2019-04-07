@@ -5,6 +5,8 @@ use core::hash::{Hash, Hasher};
 use core::ops::{Deref, DerefMut};
 
 #[cfg(feature = "alloc")]
+use alloc::boxed::Box;
+#[cfg(feature = "alloc")]
 use alloc::string::String;
 #[cfg(feature = "alloc")]
 use alloc::vec::Vec;
@@ -64,6 +66,11 @@ impl ByteBuf {
     /// Unwrap the vector of byte underlying this `ByteBuf`.
     pub fn into_vec(self) -> Vec<u8> {
         self.bytes
+    }
+
+    #[allow(missing_docs)]
+    pub fn into_boxed_bytes(self) -> Box<Bytes> {
+        self.bytes.into_boxed_slice().into()
     }
 }
 

@@ -9,9 +9,6 @@ use alloc::borrow::ToOwned;
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 
-#[cfg(feature = "alloc")]
-use alloc::vec::Vec;
-
 #[cfg(any(feature = "std", feature = "alloc"))]
 use crate::ByteBuf;
 
@@ -109,7 +106,7 @@ impl<'a> Default for &'a Bytes {
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl Default for Box<Bytes> {
     fn default() -> Self {
-        Vec::new().into_boxed_slice().into()
+        ByteBuf::new().into_boxed_bytes()
     }
 }
 
