@@ -1,10 +1,6 @@
-#[cfg(feature = "std")]
-use std::{cmp, fmt, ops};
-
-#[cfg(not(feature = "std"))]
-use core::{cmp, fmt, ops};
-
-use self::fmt::Debug;
+use core::cmp;
+use core::fmt::{self, Debug};
+use core::ops::{Deref, DerefMut};
 
 #[cfg(feature = "alloc")]
 use alloc::string::String;
@@ -104,7 +100,7 @@ impl AsMut<[u8]> for ByteBuf {
     }
 }
 
-impl ops::Deref for ByteBuf {
+impl Deref for ByteBuf {
     type Target = [u8];
 
     fn deref(&self) -> &[u8] {
@@ -112,7 +108,7 @@ impl ops::Deref for ByteBuf {
     }
 }
 
-impl ops::DerefMut for ByteBuf {
+impl DerefMut for ByteBuf {
     fn deref_mut(&mut self) -> &mut [u8] {
         &mut self.bytes[..]
     }

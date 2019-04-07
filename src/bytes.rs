@@ -1,10 +1,5 @@
-#[cfg(feature = "std")]
-use std::{fmt, ops};
-
-#[cfg(not(feature = "std"))]
-use core::{fmt, ops};
-
-use self::fmt::Debug;
+use core::fmt::{self, Debug};
+use core::ops::Deref;
 
 use serde::de::{Deserialize, Deserializer, Error, Visitor};
 use serde::ser::{Serialize, Serializer};
@@ -49,7 +44,7 @@ impl Debug for Bytes {
     }
 }
 
-impl ops::Deref for Bytes {
+impl Deref for Bytes {
     type Target = [u8];
 
     fn deref(&self) -> &[u8] {
