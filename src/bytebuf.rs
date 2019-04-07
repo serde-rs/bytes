@@ -130,7 +130,6 @@ impl BorrowMut<Bytes> for ByteBuf {
 }
 
 impl Serialize for ByteBuf {
-    #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -148,7 +147,6 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
         formatter.write_str("byte array")
     }
 
-    #[inline]
     fn visit_seq<V>(self, mut visitor: V) -> Result<ByteBuf, V::Error>
     where
         V: SeqAccess<'de>,
@@ -163,7 +161,6 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
         Ok(ByteBuf::from(values))
     }
 
-    #[inline]
     fn visit_bytes<E>(self, v: &[u8]) -> Result<ByteBuf, E>
     where
         E: Error,
@@ -171,7 +168,6 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
         Ok(ByteBuf::from(v))
     }
 
-    #[inline]
     fn visit_byte_buf<E>(self, v: Vec<u8>) -> Result<ByteBuf, E>
     where
         E: Error,
@@ -179,7 +175,6 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
         Ok(ByteBuf::from(v))
     }
 
-    #[inline]
     fn visit_str<E>(self, v: &str) -> Result<ByteBuf, E>
     where
         E: Error,
@@ -187,7 +182,6 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
         Ok(ByteBuf::from(v))
     }
 
-    #[inline]
     fn visit_string<E>(self, v: String) -> Result<ByteBuf, E>
     where
         E: Error,
@@ -197,7 +191,6 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
 }
 
 impl<'de> Deserialize<'de> for ByteBuf {
-    #[inline]
     fn deserialize<D>(deserializer: D) -> Result<ByteBuf, D::Error>
     where
         D: Deserializer<'de>,

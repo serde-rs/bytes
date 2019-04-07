@@ -82,7 +82,6 @@ impl<'de> Visitor<'de> for BytesVisitor {
         formatter.write_str("a borrowed byte array")
     }
 
-    #[inline]
     fn visit_borrowed_bytes<E>(self, v: &'de [u8]) -> Result<Self::Value, E>
     where
         E: Error,
@@ -90,7 +89,6 @@ impl<'de> Visitor<'de> for BytesVisitor {
         Ok(Bytes::new(v))
     }
 
-    #[inline]
     fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
     where
         E: Error,
@@ -100,7 +98,6 @@ impl<'de> Visitor<'de> for BytesVisitor {
 }
 
 impl<'a, 'de: 'a> Deserialize<'de> for &'a Bytes {
-    #[inline]
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
