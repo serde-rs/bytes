@@ -39,7 +39,7 @@ impl<'de> Deserialize<'de> for Vec<u8> {
     where
         D: Deserializer<'de>,
     {
-        Deserialize::deserialize(deserializer).map(ByteBuf::into_inner)
+        Deserialize::deserialize(deserializer).map(ByteBuf::into_vec)
     }
 }
 

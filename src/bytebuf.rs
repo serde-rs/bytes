@@ -61,7 +61,7 @@ impl ByteBuf {
     }
 
     /// Unwrap the vector of byte underlying this `ByteBuf`.
-    pub fn into_inner(self) -> Vec<u8> {
+    pub fn into_vec(self) -> Vec<u8> {
         self.bytes
     }
 }
