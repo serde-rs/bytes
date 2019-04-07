@@ -104,16 +104,16 @@ impl AsMut<[u8]> for ByteBuf {
 }
 
 impl Deref for ByteBuf {
-    type Target = [u8];
+    type Target = Vec<u8>;
 
-    fn deref(&self) -> &[u8] {
-        &self.bytes[..]
+    fn deref(&self) -> &Self::Target {
+        &self.bytes
     }
 }
 
 impl DerefMut for ByteBuf {
-    fn deref_mut(&mut self) -> &mut [u8] {
-        &mut self.bytes[..]
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.bytes
     }
 }
 
