@@ -79,6 +79,11 @@ impl ByteBuf {
     pub fn into_boxed_slice(self) -> Box<[u8]> {
         self.bytes.into_boxed_slice()
     }
+
+    #[doc(hidden)]
+    pub fn into_iter(self) -> <Vec<u8> as IntoIterator>::IntoIter {
+        self.bytes.into_iter()
+    }
 }
 
 impl Debug for ByteBuf {
@@ -146,6 +151,33 @@ where
 impl Hash for ByteBuf {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.bytes.hash(state);
+    }
+}
+
+impl IntoIterator for ByteBuf {
+    type Item = u8;
+    type IntoIter = <Vec<u8> as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.bytes.into_iter()
+    }
+}
+
+impl<'a> IntoIterator for &'a ByteBuf {
+    type Item = &'a u8;
+    type IntoIter = <&'a [u8] as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.bytes.iter()
+    }
+}
+
+impl<'a> IntoIterator for &'a mut ByteBuf {
+    type Item = &'a mut u8;
+    type IntoIter = <&'a mut [u8] as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.bytes.iter_mut()
     }
 }
 

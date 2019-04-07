@@ -134,6 +134,24 @@ impl Hash for Bytes {
     }
 }
 
+impl<'a> IntoIterator for &'a Bytes {
+    type Item = &'a u8;
+    type IntoIter = <&'a [u8] as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.bytes.iter()
+    }
+}
+
+impl<'a> IntoIterator for &'a mut Bytes {
+    type Item = &'a mut u8;
+    type IntoIter = <&'a mut [u8] as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.bytes.iter_mut()
+    }
+}
+
 impl Serialize for Bytes {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
