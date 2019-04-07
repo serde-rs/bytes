@@ -1,4 +1,4 @@
-use core::borrow::Borrow;
+use core::borrow::{Borrow, BorrowMut};
 use core::cmp;
 use core::fmt::{self, Debug};
 use core::ops::{Deref, DerefMut};
@@ -120,6 +120,12 @@ impl DerefMut for ByteBuf {
 impl Borrow<Bytes> for ByteBuf {
     fn borrow(&self) -> &Bytes {
         Bytes::new(&self.bytes)
+    }
+}
+
+impl BorrowMut<Bytes> for ByteBuf {
+    fn borrow_mut(&mut self) -> &mut Bytes {
+        unsafe { &mut *(&mut self.bytes as &mut [u8] as *mut [u8] as *mut Bytes) }
     }
 }
 
