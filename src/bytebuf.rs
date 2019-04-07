@@ -72,12 +72,6 @@ impl Debug for ByteBuf {
     }
 }
 
-impl From<Vec<u8>> for ByteBuf {
-    fn from(bytes: Vec<u8>) -> Self {
-        ByteBuf::from(bytes)
-    }
-}
-
 impl AsRef<[u8]> for ByteBuf {
     fn as_ref(&self) -> &[u8] {
         &self.bytes
