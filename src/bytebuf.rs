@@ -59,17 +59,16 @@ impl ByteBuf {
             bytes: bytes.into(),
         }
     }
+
+    /// Unwrap the vector of byte underlying this `ByteBuf`.
+    pub fn into_inner(self) -> Vec<u8> {
+        self.bytes
+    }
 }
 
 impl Debug for ByteBuf {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         Debug::fmt(&self.bytes, f)
-    }
-}
-
-impl From<ByteBuf> for Vec<u8> {
-    fn from(wrapper: ByteBuf) -> Vec<u8> {
-        wrapper.bytes
     }
 }
 

@@ -109,5 +109,5 @@ where
     T: From<Vec<u8>>,
     D: Deserializer<'de>,
 {
-    ByteBuf::deserialize(deserializer).map(|buf| Into::<Vec<u8>>::into(buf).into())
+    ByteBuf::deserialize(deserializer).map(|buf| buf.into_inner().into())
 }
