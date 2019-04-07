@@ -1,5 +1,5 @@
 use core::borrow::{Borrow, BorrowMut};
-use core::cmp;
+use core::cmp::{self, Ordering};
 use core::fmt::{self, Debug};
 use core::ops::{Deref, DerefMut};
 
@@ -37,7 +37,7 @@ use crate::Bytes;
 /// #     deserialize_bytebufs().unwrap();
 /// # }
 /// ```
-#[derive(Clone, Default, Eq, Hash, PartialEq, PartialOrd, Ord)]
+#[derive(Clone, Default, Eq, Hash, Ord)]
 pub struct ByteBuf {
     bytes: Vec<u8>,
 }
@@ -107,6 +107,24 @@ impl Borrow<Bytes> for ByteBuf {
 impl BorrowMut<Bytes> for ByteBuf {
     fn borrow_mut(&mut self) -> &mut Bytes {
         unsafe { &mut *(&mut self.bytes as &mut [u8] as *mut [u8] as *mut Bytes) }
+    }
+}
+
+impl<Rhs> PartialEq<Rhs> for ByteBuf
+where
+    Rhs: ?Sized + AsRef<[u8]>,
+{
+    fn eq(&self, other: &Rhs) -> bool {
+        self.as_ref().eq(other.as_ref())
+    }
+}
+
+impl<Rhs> PartialOrd<Rhs> for ByteBuf
+where
+    Rhs: ?Sized + AsRef<[u8]>,
+{
+    fn partial_cmp(&self, other: &Rhs) -> Option<Ordering> {
+        self.as_ref().partial_cmp(other.as_ref())
     }
 }
 

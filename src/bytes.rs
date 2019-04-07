@@ -1,3 +1,4 @@
+use core::cmp::Ordering;
 use core::fmt::{self, Debug};
 use core::ops::{Deref, DerefMut};
 
@@ -31,7 +32,7 @@ use serde::ser::{Serialize, Serializer};
 /// #     print_encoded_cache().unwrap();
 /// # }
 /// ```
-#[derive(Eq, Hash, PartialEq, PartialOrd, Ord)]
+#[derive(Eq, Hash, Ord)]
 #[repr(C)]
 pub struct Bytes {
     bytes: [u8],
@@ -82,6 +83,24 @@ impl ToOwned for Bytes {
 
     fn to_owned(&self) -> Self::Owned {
         ByteBuf::from(&self.bytes)
+    }
+}
+
+impl<Rhs> PartialEq<Rhs> for Bytes
+where
+    Rhs: ?Sized + AsRef<[u8]>,
+{
+    fn eq(&self, other: &Rhs) -> bool {
+        self.as_ref().eq(other.as_ref())
+    }
+}
+
+impl<Rhs> PartialOrd<Rhs> for Bytes
+where
+    Rhs: ?Sized + AsRef<[u8]>,
+{
+    fn partial_cmp(&self, other: &Rhs) -> Option<Ordering> {
+        self.as_ref().partial_cmp(other.as_ref())
     }
 }
 
