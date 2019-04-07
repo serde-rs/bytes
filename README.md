@@ -15,13 +15,9 @@ This crate supports the Serde `with` attribute to enable efficient handling
 of `&[u8]` and `Vec<u8>` in structs without needing a wrapper type.
 
 ```rust
-#[macro_use]
-extern crate serde_derive;
+use serde::{Deserialize, Serialize};
 
-extern crate serde;
-extern crate serde_bytes;
-
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 struct Efficient<'a> {
     #[serde(with = "serde_bytes")]
     bytes: &'a [u8],
