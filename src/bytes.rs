@@ -1,5 +1,5 @@
 use core::fmt::{self, Debug};
-use core::ops::Deref;
+use core::ops::{Deref, DerefMut};
 
 #[cfg(feature = "alloc")]
 use alloc::borrow::ToOwned;
@@ -53,8 +53,14 @@ impl Debug for Bytes {
 impl Deref for Bytes {
     type Target = [u8];
 
-    fn deref(&self) -> &[u8] {
+    fn deref(&self) -> &Self::Target {
         &self.bytes
+    }
+}
+
+impl DerefMut for Bytes {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.bytes
     }
 }
 
