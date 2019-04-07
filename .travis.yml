@@ -7,9 +7,13 @@ rust:
   - beta
   - nightly
 
-script: cargo test
+script:
+  - cargo test
+  - cargo check --no-default-features
 
 matrix:
   include:
     - rust: 1.15.0
-      script: cargo build
+      script:
+        - cargo build
+        - cargo build --no-default-features
