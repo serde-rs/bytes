@@ -5,7 +5,6 @@ rust:
   - 1.18.0
   - stable
   - beta
-  - nightly
 
 script:
   - cargo test
@@ -13,6 +12,11 @@ script:
 
 matrix:
   include:
+    - rust: nightly
+      script:
+        - cargo test
+        - cargo check --no-default-features
+        - cargo check --no-default-features --features alloc
     - rust: 1.15.0
       script:
         - cargo build
