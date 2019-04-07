@@ -1,3 +1,4 @@
+use core::borrow::Borrow;
 use core::cmp;
 use core::fmt::{self, Debug};
 use core::ops::{Deref, DerefMut};
@@ -9,6 +10,8 @@ use alloc::vec::Vec;
 
 use serde::de::{Deserialize, Deserializer, Error, SeqAccess, Visitor};
 use serde::ser::{Serialize, Serializer};
+
+use crate::Bytes;
 
 /// Wrapper around `Vec<u8>` to serialize and deserialize efficiently.
 ///
@@ -111,6 +114,12 @@ impl Deref for ByteBuf {
 impl DerefMut for ByteBuf {
     fn deref_mut(&mut self) -> &mut [u8] {
         &mut self.bytes[..]
+    }
+}
+
+impl Borrow<Bytes> for ByteBuf {
+    fn borrow(&self) -> &Bytes {
+        Bytes::new(&self.bytes)
     }
 }
 

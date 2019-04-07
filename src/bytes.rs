@@ -1,6 +1,9 @@
 use core::fmt::{self, Debug};
 use core::ops::Deref;
 
+#[cfg(feature = "alloc")]
+use alloc::borrow::ToOwned;
+
 use serde::de::{Deserialize, Deserializer, Error, Visitor};
 use serde::ser::{Serialize, Serializer};
 
@@ -49,6 +52,15 @@ impl Deref for Bytes {
 
     fn deref(&self) -> &[u8] {
         &self.bytes
+    }
+}
+
+#[cfg(any(feature = "std", feature = "alloc"))]
+impl ToOwned for Bytes {
+    type Owned = crate::ByteBuf;
+
+    fn to_owned(&self) -> Self::Owned {
+        unimplemented!()
     }
 }
 
