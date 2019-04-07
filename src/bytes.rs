@@ -4,6 +4,9 @@ use core::ops::Deref;
 #[cfg(feature = "alloc")]
 use alloc::borrow::ToOwned;
 
+#[cfg(any(feature = "std", feature = "alloc"))]
+use crate::ByteBuf;
+
 use serde::de::{Deserialize, Deserializer, Error, Visitor};
 use serde::ser::{Serialize, Serializer};
 
@@ -57,10 +60,10 @@ impl Deref for Bytes {
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl ToOwned for Bytes {
-    type Owned = crate::ByteBuf;
+    type Owned = ByteBuf;
 
     fn to_owned(&self) -> Self::Owned {
-        unimplemented!()
+        ByteBuf::from(&self.bytes)
     }
 }
 
