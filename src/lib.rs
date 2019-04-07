@@ -38,6 +38,8 @@
 #![deny(missing_docs)]
 
 mod bytes;
+mod de;
+mod ser;
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 mod bytebuf;
@@ -45,18 +47,17 @@ mod bytebuf;
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-#[cfg(feature = "alloc")]
-use alloc::vec::Vec;
-
 #[cfg(any(feature = "std", feature = "alloc"))]
-use serde::{Deserialize, Deserializer};
+use serde::Deserializer;
 
 use serde::Serializer;
 
-pub use self::bytes::Bytes;
+pub use crate::bytes::Bytes;
+pub use crate::de::Deserialize;
+pub use crate::ser::Serialize;
 
 #[cfg(any(feature = "std", feature = "alloc"))]
-pub use self::bytebuf::ByteBuf;
+pub use crate::bytebuf::ByteBuf;
 
 /// Serde `serialize_with` function to serialize bytes efficiently.
 ///
@@ -80,10 +81,10 @@ pub use self::bytebuf::ByteBuf;
 /// ```
 pub fn serialize<T, S>(bytes: &T, serializer: S) -> Result<S::Ok, S::Error>
 where
-    T: ?Sized + AsRef<[u8]>,
+    T: Serialize,
     S: Serializer,
 {
-    serializer.serialize_bytes(bytes.as_ref())
+    Serialize::serialize(bytes, serializer)
 }
 
 /// Serde `deserialize_with` function to deserialize bytes efficiently.
@@ -106,8 +107,8 @@ where
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
 where
-    T: From<Vec<u8>>,
+    T: Deserialize<'de>,
     D: Deserializer<'de>,
 {
-    ByteBuf::deserialize(deserializer).map(|buf| buf.into_inner().into())
+    Deserialize::deserialize(deserializer)
 }
