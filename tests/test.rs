@@ -1,7 +1,4 @@
-extern crate serde_bytes;
 use serde_bytes::{ByteBuf, Bytes};
-
-extern crate serde_test;
 use serde_test::{assert_de_tokens, assert_ser_tokens, assert_tokens, Token};
 
 #[test]
