@@ -146,7 +146,7 @@ pub struct Bytes<'a> {
 impl<'a> Bytes<'a> {
     /// Wrap an existing `&[u8]`.
     pub fn new(bytes: &'a [u8]) -> Self {
-        Bytes { bytes: bytes }
+        Bytes { bytes }
     }
 }
 
