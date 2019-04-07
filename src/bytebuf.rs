@@ -72,6 +72,13 @@ impl ByteBuf {
     pub fn into_boxed_bytes(self) -> Box<Bytes> {
         self.bytes.into_boxed_slice().into()
     }
+
+    // This would hit "cannot move out of borrowed content" if invoked through
+    // the Deref impl; make it just work.
+    #[doc(hidden)]
+    pub fn into_boxed_slice(self) -> Box<[u8]> {
+        self.bytes.into_boxed_slice()
+    }
 }
 
 impl Debug for ByteBuf {
