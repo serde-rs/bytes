@@ -2,6 +2,8 @@
 
 Wrapper types to enable optimized handling of `&[u8]` and `Vec<u8>`.
 
+## Explanation
+
 Without specialization, Rust forces Serde to treat `&[u8]` just like any
 other slice and `Vec<u8>` just like any other vector. In reality this
 particular slice and vector can often be serialized and deserialized in a
@@ -11,8 +13,10 @@ When working with such a format, you can opt into specialized handling of
 `&[u8]` by wrapping it in `serde_bytes::Bytes` and `Vec<u8>` by wrapping it
 in `serde_bytes::ByteBuf`.
 
-This crate supports the Serde `with` attribute to enable efficient handling
-of `&[u8]` and `Vec<u8>` in structs without needing a wrapper type.
+Additionally this crate supports the Serde `with` attribute to enable efficient
+handling of `&[u8]` and `Vec<u8>` in structs without needing a wrapper type.
+
+## Example
 
 ```rust
 use serde::{Deserialize, Serialize};
