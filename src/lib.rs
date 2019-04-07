@@ -57,8 +57,6 @@ use serde::ser::{Serialize, Serializer};
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub use self::bytebuf::ByteBuf;
 
-mod value;
-
 //////////////////////////////////////////////////////////////////////////////
 
 /// Serde `serialize_with` function to serialize bytes efficiently.
