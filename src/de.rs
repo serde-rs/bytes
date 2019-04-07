@@ -100,6 +100,6 @@ impl<'de> Deserialize<'de> for Box<Bytes> {
         D: Deserializer<'de>,
     {
         let bytes: Box<[u8]> = Deserialize::deserialize(deserializer)?;
-        Ok(unsafe { Box::from_raw(Box::into_raw(bytes) as *mut Bytes) })
+        Ok(bytes.into())
     }
 }

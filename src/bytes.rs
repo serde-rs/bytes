@@ -6,6 +6,9 @@ use core::ops::{Deref, DerefMut};
 #[cfg(feature = "alloc")]
 use alloc::borrow::ToOwned;
 
+#[cfg(feature = "alloc")]
+use alloc::boxed::Box;
+
 #[cfg(any(feature = "std", feature = "alloc"))]
 use crate::ByteBuf;
 
@@ -84,6 +87,13 @@ impl ToOwned for Bytes {
 
     fn to_owned(&self) -> Self::Owned {
         ByteBuf::from(&self.bytes)
+    }
+}
+
+#[cfg(any(feature = "std", feature = "alloc"))]
+impl From<Box<[u8]>> for Box<Bytes> {
+    fn from(bytes: Box<[u8]>) -> Self {
+        unsafe { Box::from_raw(Box::into_raw(bytes) as *mut Bytes) }
     }
 }
 
