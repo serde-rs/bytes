@@ -25,12 +25,6 @@ struct Efficient<'a> {
     #[serde(with = "serde_bytes")]
     byte_buf: Vec<u8>,
 }
-
-#[derive(Serialize, Deserialize)]
-struct Packet {
-    #[serde(with = "serde_bytes")]
-    payload: Vec<u8>,
-}
 ```
 
 ## License
