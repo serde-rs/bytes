@@ -136,83 +136,71 @@ where
 /// #     print_encoded_cache().unwrap();
 /// # }
 /// ```
-#[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd, Ord)]
-pub struct Bytes<'a> {
-    bytes: &'a [u8],
+#[derive(Eq, Hash, PartialEq, PartialOrd, Ord)]
+#[repr(C)]
+pub struct Bytes {
+    bytes: [u8],
 }
 
-impl<'a> Bytes<'a> {
+impl Bytes {
     /// Wrap an existing `&[u8]`.
-    pub fn new(bytes: &'a [u8]) -> Self {
-        Bytes { bytes }
+    pub fn new(bytes: &[u8]) -> &Self {
+        unsafe { &*(bytes as *const [u8] as *const Bytes) }
     }
 }
 
-impl<'a> Debug for Bytes<'a> {
+impl Debug for Bytes {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        Debug::fmt(self.bytes, f)
+        Debug::fmt(&self.bytes, f)
     }
 }
 
-impl<'a> From<&'a [u8]> for Bytes<'a> {
-    fn from(bytes: &'a [u8]) -> Self {
-        Bytes::new(bytes)
-    }
-}
-
-impl<'a> From<Bytes<'a>> for &'a [u8] {
-    fn from(wrapper: Bytes<'a>) -> &'a [u8] {
-        wrapper.bytes
-    }
-}
-
-impl<'a> ops::Deref for Bytes<'a> {
+impl ops::Deref for Bytes {
     type Target = [u8];
 
     fn deref(&self) -> &[u8] {
-        self.bytes
+        &self.bytes
     }
 }
 
-impl<'a> Serialize for Bytes<'a> {
-    #[inline]
+impl Serialize for Bytes {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        serializer.serialize_bytes(self.bytes)
+        serializer.serialize_bytes(&self.bytes)
     }
 }
 
 struct BytesVisitor;
 
 impl<'de> Visitor<'de> for BytesVisitor {
-    type Value = Bytes<'de>;
+    type Value = &'de Bytes;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
         formatter.write_str("a borrowed byte array")
     }
 
     #[inline]
-    fn visit_borrowed_bytes<E>(self, v: &'de [u8]) -> Result<Bytes<'de>, E>
+    fn visit_borrowed_bytes<E>(self, v: &'de [u8]) -> Result<Self::Value, E>
     where
         E: Error,
     {
-        Ok(Bytes::from(v))
+        Ok(Bytes::new(v))
     }
 
     #[inline]
-    fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Bytes<'de>, E>
+    fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
     where
         E: Error,
     {
-        Ok(Bytes::from(v.as_bytes()))
+        Ok(Bytes::new(v.as_bytes()))
     }
 }
 
-impl<'a, 'de: 'a> Deserialize<'de> for Bytes<'a> {
+impl<'a, 'de: 'a> Deserialize<'de> for &'a Bytes {
     #[inline]
-    fn deserialize<D>(deserializer: D) -> Result<Bytes<'a>, D::Error>
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
     {
