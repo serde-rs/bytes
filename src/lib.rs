@@ -76,7 +76,7 @@ pub use crate::bytebuf::ByteBuf;
 /// ```
 pub fn serialize<T, S>(bytes: &T, serializer: S) -> Result<S::Ok, S::Error>
 where
-    T: Serialize,
+    T: ?Sized + Serialize,
     S: Serializer,
 {
     Serialize::serialize(bytes, serializer)

@@ -28,3 +28,9 @@ struct Test<'a> {
     #[serde(with = "serde_bytes")]
     boxed_bytes: Box<Bytes>,
 }
+
+#[derive(Serialize)]
+struct Dst {
+    #[serde(with = "serde_bytes")]
+    bytes: [u8],
+}
