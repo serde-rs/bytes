@@ -79,21 +79,9 @@ impl From<Vec<u8>> for ByteBuf {
     }
 }
 
-impl AsRef<Vec<u8>> for ByteBuf {
-    fn as_ref(&self) -> &Vec<u8> {
-        &self.bytes
-    }
-}
-
 impl AsRef<[u8]> for ByteBuf {
     fn as_ref(&self) -> &[u8] {
         &self.bytes
-    }
-}
-
-impl AsMut<Vec<u8>> for ByteBuf {
-    fn as_mut(&mut self) -> &mut Vec<u8> {
-        &mut self.bytes
     }
 }
 
