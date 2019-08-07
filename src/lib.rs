@@ -29,7 +29,6 @@
 
 #![doc(html_root_url = "https://docs.rs/serde_bytes/0.11.1")]
 #![cfg_attr(not(feature = "std"), no_std)]
-#![cfg_attr(feature = "alloc", feature(alloc))]
 #![deny(missing_docs)]
 
 mod bytes;
