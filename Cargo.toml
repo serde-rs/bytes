@@ -17,6 +17,7 @@ std = ["serde/std"]
 alloc = ["serde/alloc"]
 
 [dependencies]
+heapless = {  version = "0.5.1", optional = true }
 serde = { version = "1.0", default-features = false }
 
 [dev-dependencies]

@@ -15,6 +15,9 @@ use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
+#[cfg(feature = "heapless")]
+use heapless::{ArrayLength, Vec};
+
 /// Types that can be deserialized via `#[serde(with = "serde_bytes")]`.
 pub trait Deserialize<'de>: Sized {
     #[allow(missing_docs)]
@@ -40,6 +43,24 @@ impl<'de> Deserialize<'de> for Vec<u8> {
         D: Deserializer<'de>,
     {
         Deserialize::deserialize(deserializer).map(ByteBuf::into_vec)
+    }
+}
+
+#[cfg(feature = "heapless")]
+impl<'de, N> Deserialize<'de> for Vec<u8, N>
+where
+    N: ArrayLength<u8>,
+{
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Deserialize::deserialize(deserializer).map(|bytes| {
+            let mut vec: Vec<u8, N> = Vec::new();
+            // TODO: can we map errors?
+            vec.extend_from_slice(bytes).unwrap();
+            vec
+        })
     }
 }
 

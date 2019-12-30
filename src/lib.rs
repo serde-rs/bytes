@@ -41,7 +41,7 @@ mod bytebuf;
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-#[cfg(any(feature = "std", feature = "alloc"))]
+#[cfg(any(feature = "std", feature = "alloc", feature = "heapless"))]
 use serde::Deserializer;
 
 use serde::Serializer;
@@ -98,7 +98,7 @@ where
 ///     payload: Vec<u8>,
 /// }
 /// ```
-#[cfg(any(feature = "std", feature = "alloc"))]
+#[cfg(any(feature = "std", feature = "alloc", feature= "heapless"))]
 pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
 where
     T: Deserialize<'de>,

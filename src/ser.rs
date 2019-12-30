@@ -15,6 +15,9 @@ use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
+#[cfg(feature = "heapless")]
+use heapless::{ArrayLength, Vec};
+
 /// Types that can be serialized via `#[serde(with = "serde_bytes")]`.
 pub trait Serialize {
     #[allow(missing_docs)]
@@ -34,6 +37,19 @@ impl Serialize for [u8] {
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl Serialize for Vec<u8> {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_bytes(self)
+    }
+}
+
+#[cfg(feature = "heapless")]
+impl<N> Serialize for Vec<u8, N>
+where
+    N: ArrayLength<u8>,
+{
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
