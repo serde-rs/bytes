@@ -26,3 +26,6 @@ serde_test = "1.0"
 
 [badges]
 travis-ci = { repository = "serde-rs/bytes" }
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
