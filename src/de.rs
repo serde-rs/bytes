@@ -103,3 +103,16 @@ impl<'de> Deserialize<'de> for Box<Bytes> {
         Ok(bytes.into())
     }
 }
+
+impl<'de, T> Deserialize<'de> for Option<T>
+where
+    T: Deserialize<'de> + serde::de::Deserialize<'de> + From<&'de [u8]>,
+{
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let bytes: Option<&[u8]> = serde::Deserialize::deserialize(deserializer)?;
+        Ok(bytes.map(|v| v.into()))
+    }
+}

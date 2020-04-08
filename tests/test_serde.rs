@@ -57,3 +57,11 @@ fn test_byte_buf() {
         ],
     );
 }
+
+#[test]
+fn test_option() {
+    let some = Some(Bytes::new(b"ABC"));
+    assert_tokens(&some, &[Token::Some, Token::BorrowedBytes(b"ABC")]);
+    let none: Option<ByteBuf> = None;
+    assert_tokens(&none, &[Token::None]);
+}

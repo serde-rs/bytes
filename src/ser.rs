@@ -105,3 +105,15 @@ where
         (**self).serialize(serializer)
     }
 }
+
+impl<T> Serialize for Option<T> where T: Serialize + std::ops::Deref<Target = [u8]> {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match self {
+            Some(b) => serializer.serialize_some(Bytes::new(&b)),
+            None => serializer.serialize_none(),
+        }
+    }
+}
