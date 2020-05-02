@@ -28,6 +28,15 @@ struct Test<'a> {
 
     #[serde(with = "serde_bytes")]
     boxed_bytes: Box<Bytes>,
+
+    #[serde(with = "serde_bytes")]
+    opt_slice: Option<&'a [u8]>,
+
+    #[serde(with = "serde_bytes")]
+    opt_vec: Option<Vec<u8>>,
+
+    #[serde(with = "serde_bytes")]
+    opt_cow_slice: Option<Cow<'a, [u8]>>,
 }
 
 #[derive(Serialize)]
@@ -47,6 +56,9 @@ fn test() {
         cow_bytes: Cow::Borrowed(Bytes::new(b"...")),
         boxed_slice: b"...".to_vec().into_boxed_slice(),
         boxed_bytes: ByteBuf::from(b"...".as_ref()).into_boxed_bytes(),
+        opt_slice: Some(b"..."),
+        opt_vec: Some(b"...".to_vec()),
+        opt_cow_slice: Some(Cow::Borrowed(b"...")),
     };
 
     assert_tokens(
@@ -54,7 +66,7 @@ fn test() {
         &[
             Token::Struct {
                 name: "Test",
-                len: 8,
+                len: 11,
             },
             Token::Str("slice"),
             Token::BorrowedBytes(b"..."),
@@ -72,6 +84,15 @@ fn test() {
             Token::Bytes(b"..."),
             Token::Str("boxed_bytes"),
             Token::Bytes(b"..."),
+            Token::Str("opt_slice"),
+            Token::Some,
+            Token::BorrowedBytes(b"..."),
+            Token::Str("opt_vec"),
+            Token::Some,
+            Token::Bytes(b"..."),
+            Token::Str("opt_cow_slice"),
+            Token::Some,
+            Token::BorrowedBytes(b"..."),
             Token::StructEnd,
         ],
     );

@@ -1,4 +1,7 @@
 use crate::Bytes;
+use core::fmt;
+use core::marker::PhantomData;
+use serde::de::{Error, Visitor};
 use serde::Deserializer;
 
 #[cfg(any(feature = "std", feature = "alloc"))]
@@ -101,5 +104,48 @@ impl<'de> Deserialize<'de> for Box<Bytes> {
     {
         let bytes: Box<[u8]> = Deserialize::deserialize(deserializer)?;
         Ok(bytes.into())
+    }
+}
+
+impl<'de, T> Deserialize<'de> for Option<T>
+where
+    T: Deserialize<'de>,
+{
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct BytesVisitor<T> {
+            out: PhantomData<T>,
+        }
+
+        impl<'de, T> Visitor<'de> for BytesVisitor<T>
+        where
+            T: Deserialize<'de>,
+        {
+            type Value = Option<T>;
+
+            fn expecting(&self, f: &mut fmt::Formatter) -> fmt::Result {
+                f.write_str("optional byte array")
+            }
+
+            fn visit_unit<E: Error>(self) -> Result<Self::Value, E> {
+                Ok(None)
+            }
+
+            fn visit_none<E: Error>(self) -> Result<Self::Value, E> {
+                Ok(None)
+            }
+
+            fn visit_some<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+            where
+                D: Deserializer<'de>,
+            {
+                T::deserialize(deserializer).map(Some)
+            }
+        }
+
+        let visitor = BytesVisitor { out: PhantomData };
+        deserializer.deserialize_option(visitor)
     }
 }
