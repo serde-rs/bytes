@@ -1,7 +1,20 @@
 use crate::{ByteBuf, Bytes};
 
-use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
+use core::fmt;
+
+#[cfg(feature = "alloc")]
+use alloc::borrow::Cow;
+#[cfg(all(feature = "std", not(feature = "alloc")))]
 use std::borrow::Cow;
+
+#[cfg(feature = "alloc")]
+use alloc::borrow::ToOwned;
+#[cfg(feature = "alloc")]
+use alloc::string::String;
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
+
+use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
 
 pub struct CowBytes<'a> {
     bytes: Cow<'a, [u8]>,
@@ -34,7 +47,7 @@ struct CowBytesVisitor;
 impl<'de> Visitor<'de> for CowBytesVisitor {
     type Value = CowBytes<'de>;
 
-    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("bytes")
     }
 
