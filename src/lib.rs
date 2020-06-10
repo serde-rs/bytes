@@ -38,6 +38,9 @@ mod ser;
 #[cfg(any(feature = "std", feature = "alloc"))]
 mod bytebuf;
 
+#[cfg(any(feature = "std", feature = "alloc"))]
+mod cowbytes;
+
 #[cfg(feature = "alloc")]
 extern crate alloc;
 

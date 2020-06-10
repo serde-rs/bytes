@@ -7,6 +7,9 @@ use serde::Deserializer;
 #[cfg(any(feature = "std", feature = "alloc"))]
 use crate::ByteBuf;
 
+#[cfg(any(feature = "std", feature = "alloc"))]
+use crate::cowbytes::CowBytes;
+
 #[cfg(feature = "alloc")]
 use alloc::borrow::Cow;
 #[cfg(all(feature = "std", not(feature = "alloc")))]
@@ -72,7 +75,17 @@ impl<'de: 'a, 'a> Deserialize<'de> for Cow<'a, [u8]> {
     where
         D: Deserializer<'de>,
     {
-        Deserialize::deserialize(deserializer).map(Cow::Borrowed)
+        Deserialize::deserialize(deserializer).map(CowBytes::into_cow)
+    }
+}
+
+#[cfg(any(feature = "std", feature = "alloc"))]
+impl<'de: 'a, 'a> Deserialize<'de> for CowBytes<'a> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        serde::Deserialize::deserialize(deserializer)
     }
 }
 
@@ -82,7 +95,7 @@ impl<'de: 'a, 'a> Deserialize<'de> for Cow<'a, Bytes> {
     where
         D: Deserializer<'de>,
     {
-        Deserialize::deserialize(deserializer).map(Cow::Borrowed)
+        Deserialize::deserialize(deserializer).map(CowBytes::into_cow_bytes)
     }
 }
 
