@@ -22,3 +22,11 @@ jobs:
       - run: cargo check --no-default-features
       - run: cargo check --no-default-features --features alloc
         if: matrix.rust != '1.31.0'
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dtolnay/rust-toolchain@clippy
+      - run: cargo clippy -- -Dclippy::all
