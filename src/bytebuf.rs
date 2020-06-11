@@ -204,13 +204,13 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
         V: SeqAccess<'de>,
     {
         let len = cmp::min(visitor.size_hint().unwrap_or(0), 4096);
-        let mut values = Vec::with_capacity(len);
+        let mut bytes = Vec::with_capacity(len);
 
-        while let Some(value) = visitor.next_element()? {
-            values.push(value);
+        while let Some(b) = visitor.next_element()? {
+            bytes.push(b);
         }
 
-        Ok(ByteBuf::from(values))
+        Ok(ByteBuf::from(bytes))
     }
 
     fn visit_bytes<E>(self, v: &[u8]) -> Result<ByteBuf, E>
