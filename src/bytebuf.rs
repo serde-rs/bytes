@@ -81,6 +81,7 @@ impl ByteBuf {
     }
 
     #[doc(hidden)]
+    #[allow(clippy::should_implement_trait)]
     pub fn into_iter(self) -> <Vec<u8> as IntoIterator>::IntoIter {
         self.bytes.into_iter()
     }
