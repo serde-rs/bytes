@@ -155,7 +155,11 @@ impl<'de: 'a, 'a> Deserialize<'de> for Cow<'a, Bytes> {
     where
         D: Deserializer<'de>,
     {
-        Deserialize::deserialize(deserializer).map(Cow::Borrowed)
+        let cow: Cow<[u8]> = Deserialize::deserialize(deserializer)?;
+        match cow {
+            Cow::Borrowed(bytes) => Ok(Cow::Borrowed(Bytes::new(bytes))),
+            Cow::Owned(bytes) => Ok(Cow::Owned(ByteBuf::from(bytes))),
+        }
     }
 }
 
