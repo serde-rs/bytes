@@ -1,5 +1,5 @@
 use core::borrow::{Borrow, BorrowMut};
-use core::cmp::{self, Ordering};
+use core::cmp::Ordering;
 use core::fmt::{self, Debug};
 use core::hash::{Hash, Hasher};
 use core::ops::{Deref, DerefMut};
@@ -11,7 +11,7 @@ use alloc::string::String;
 #[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
-use serde::de::{Deserialize, Deserializer, Error, SeqAccess, Visitor};
+use serde::de::{Deserialize, Deserializer, Error, Visitor};
 use serde::ser::{Serialize, Serializer};
 
 use crate::Bytes;
@@ -200,20 +200,6 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
         formatter.write_str("byte array")
     }
 
-    fn visit_seq<V>(self, mut visitor: V) -> Result<ByteBuf, V::Error>
-    where
-        V: SeqAccess<'de>,
-    {
-        let len = cmp::min(visitor.size_hint().unwrap_or(0), 4096);
-        let mut bytes = Vec::with_capacity(len);
-
-        while let Some(b) = visitor.next_element()? {
-            bytes.push(b);
-        }
-
-        Ok(ByteBuf::from(bytes))
-    }
-
     fn visit_bytes<E>(self, v: &[u8]) -> Result<ByteBuf, E>
     where
         E: Error,
@@ -222,20 +208,6 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
     }
 
     fn visit_byte_buf<E>(self, v: Vec<u8>) -> Result<ByteBuf, E>
-    where
-        E: Error,
-    {
-        Ok(ByteBuf::from(v))
-    }
-
-    fn visit_str<E>(self, v: &str) -> Result<ByteBuf, E>
-    where
-        E: Error,
-    {
-        Ok(ByteBuf::from(v))
-    }
-
-    fn visit_string<E>(self, v: String) -> Result<ByteBuf, E>
     where
         E: Error,
     {

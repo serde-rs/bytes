@@ -176,13 +176,6 @@ impl<'de> Visitor<'de> for BytesVisitor {
     {
         Ok(Bytes::new(v))
     }
-
-    fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
-    where
-        E: Error,
-    {
-        Ok(Bytes::new(v.as_bytes()))
-    }
 }
 
 impl<'a, 'de: 'a> Deserialize<'de> for &'a Bytes {
