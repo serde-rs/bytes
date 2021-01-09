@@ -12,16 +12,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust: [nightly, beta, stable, 1.36.0, 1.31.0]
+        rust: [nightly, beta, stable, 1.36.0, 1.34.0, 1.31.0]
     steps:
       - uses: actions/checkout@v2
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{matrix.rust}}
       - run: cargo test
+        if: matrix.rust != '1.31.0' && matrix.rust != '1.34.0'
       - run: cargo check --no-default-features
       - run: cargo check --no-default-features --features alloc
-        if: matrix.rust != '1.31.0'
+        if: matrix.rust != '1.31.0' && matrix.rust != '1.34.0'
 
   clippy:
     name: Clippy
