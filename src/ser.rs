@@ -1,4 +1,4 @@
-use crate::Bytes;
+use crate::{ByteArray, Bytes};
 use serde::Serializer;
 
 #[cfg(any(feature = "std", feature = "alloc"))]
@@ -48,6 +48,24 @@ impl Serialize for Bytes {
         S: Serializer,
     {
         serializer.serialize_bytes(self)
+    }
+}
+
+impl<const N: usize> Serialize for [u8; N] {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_bytes(self)
+    }
+}
+
+impl<const N: usize> Serialize for ByteArray<N> {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_bytes(&**self)
     }
 }
 

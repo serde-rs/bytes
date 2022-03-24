@@ -1,4 +1,4 @@
-use crate::Bytes;
+use crate::{ByteArray, Bytes};
 use core::fmt;
 use core::marker::PhantomData;
 use serde::de::{Error, Visitor};
@@ -60,6 +60,26 @@ impl<'de: 'a, 'a> Deserialize<'de> for &'a Bytes {
     {
         // serde::Deserialize for &[u8] is already optimized, so simply forward to that.
         serde::Deserialize::deserialize(deserializer).map(Bytes::new)
+    }
+}
+
+impl<'de, const N: usize> Deserialize<'de> for [u8; N] {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let arr: ByteArray<N> = serde::Deserialize::deserialize(deserializer)?;
+        Ok(*arr)
+    }
+}
+
+impl<'de, const N: usize> Deserialize<'de> for ByteArray<N> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        // Via the serde::Deserialize impl for ByteArray
+        serde::Deserialize::deserialize(deserializer)
     }
 }
 

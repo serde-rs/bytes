@@ -24,6 +24,9 @@
 //!
 //!     #[serde(with = "serde_bytes")]
 //!     byte_buf: Vec<u8>,
+//!
+//!     #[serde(with = "serde_bytes")]
+//!     byte_array: [u8; 314],
 //! }
 //! ```
 
@@ -36,6 +39,7 @@
     clippy::needless_doctest_main
 )]
 
+mod bytearray;
 mod bytes;
 mod de;
 mod ser;
@@ -51,6 +55,7 @@ use serde::Deserializer;
 
 use serde::Serializer;
 
+pub use crate::bytearray::ByteArray;
 pub use crate::bytes::Bytes;
 pub use crate::de::Deserialize;
 pub use crate::ser::Serialize;
