@@ -1,6 +1,6 @@
 #![allow(clippy::derive_partial_eq_without_eq, clippy::ref_option_ref)]
 
-use serde_bytes::{ByteBuf, Bytes};
+use serde_bytes::{ByteArray, ByteBuf, Bytes};
 use serde_derive::{Deserialize, Serialize};
 use serde_test::{assert_tokens, Token};
 use std::borrow::Cow;
@@ -11,10 +11,16 @@ struct Test<'a> {
     slice: &'a [u8],
 
     #[serde(with = "serde_bytes")]
+    array: [u8; 314],
+
+    #[serde(with = "serde_bytes")]
     vec: Vec<u8>,
 
     #[serde(with = "serde_bytes")]
     bytes: &'a Bytes,
+
+    #[serde(with = "serde_bytes")]
+    byte_array: ByteArray<314>,
 
     #[serde(with = "serde_bytes")]
     byte_buf: ByteBuf,
@@ -38,6 +44,12 @@ struct Test<'a> {
     opt_vec: Option<Vec<u8>>,
 
     #[serde(with = "serde_bytes")]
+    opt_array: Option<[u8; 314]>,
+
+    #[serde(with = "serde_bytes")]
+    opt_bytearray: Option<ByteArray<314>>,
+
+    #[serde(with = "serde_bytes")]
     opt_cow_slice: Option<Cow<'a, [u8]>>,
 }
 
@@ -51,8 +63,10 @@ struct Dst {
 fn test() {
     let test = Test {
         slice: b"...",
+        array: [0; 314],
         vec: b"...".to_vec(),
         bytes: Bytes::new(b"..."),
+        byte_array: ByteArray::new([0; 314]),
         byte_buf: ByteBuf::from(b"...".as_ref()),
         cow_slice: Cow::Borrowed(b"..."),
         cow_bytes: Cow::Borrowed(Bytes::new(b"...")),
@@ -60,6 +74,8 @@ fn test() {
         boxed_bytes: ByteBuf::from(b"...".as_ref()).into_boxed_bytes(),
         opt_slice: Some(b"..."),
         opt_vec: Some(b"...".to_vec()),
+        opt_array: Some([0; 314]),
+        opt_bytearray: Some(ByteArray::new([0; 314])),
         opt_cow_slice: Some(Cow::Borrowed(b"...")),
     };
 
@@ -68,14 +84,18 @@ fn test() {
         &[
             Token::Struct {
                 name: "Test",
-                len: 11,
+                len: 15,
             },
             Token::Str("slice"),
             Token::BorrowedBytes(b"..."),
+            Token::Str("array"),
+            Token::Bytes(&[0; 314]),
             Token::Str("vec"),
             Token::Bytes(b"..."),
             Token::Str("bytes"),
             Token::BorrowedBytes(b"..."),
+            Token::Str("byte_array"),
+            Token::Bytes(&[0; 314]),
             Token::Str("byte_buf"),
             Token::Bytes(b"..."),
             Token::Str("cow_slice"),
@@ -92,6 +112,12 @@ fn test() {
             Token::Str("opt_vec"),
             Token::Some,
             Token::Bytes(b"..."),
+            Token::Str("opt_array"),
+            Token::Some,
+            Token::Bytes(&[0; 314]),
+            Token::Str("opt_bytearray"),
+            Token::Some,
+            Token::Bytes(&[0; 314]),
             Token::Str("opt_cow_slice"),
             Token::Some,
             Token::BorrowedBytes(b"..."),

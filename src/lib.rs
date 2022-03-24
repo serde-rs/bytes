@@ -81,6 +81,9 @@ pub use crate::bytebuf::ByteBuf;
 ///
 ///     #[serde(with = "serde_bytes")]
 ///     byte_buf: Vec<u8>,
+///
+///     #[serde(with = "serde_bytes")]
+///     byte_array: [u8; 314],
 /// }
 /// ```
 pub fn serialize<T, S>(bytes: &T, serializer: S) -> Result<S::Ok, S::Error>
@@ -106,6 +109,9 @@ where
 /// struct Packet {
 ///     #[serde(with = "serde_bytes")]
 ///     payload: Vec<u8>,
+///
+///     #[serde(with = "serde_bytes")]
+///     byte_array: [u8; 314],
 /// }
 /// ```
 #[cfg(any(feature = "std", feature = "alloc"))]
