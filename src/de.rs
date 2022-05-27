@@ -38,8 +38,7 @@ impl<'de: 'a, 'a> Deserialize<'de> for &'a [u8] {
     where
         D: Deserializer<'de>,
     {
-        // Via the serde::Deserialize impl for &[u8].
-        serde::Deserialize::deserialize(deserializer)
+        Deserialize::deserialize(deserializer).map(Bytes::as_ref)
     }
 }
 
@@ -58,7 +57,8 @@ impl<'de: 'a, 'a> Deserialize<'de> for &'a Bytes {
     where
         D: Deserializer<'de>,
     {
-        Deserialize::deserialize(deserializer).map(Bytes::new)
+        // Via the serde::Deserialize impl for Bytes.
+        serde::Deserialize::deserialize(deserializer)
     }
 }
 
