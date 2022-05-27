@@ -58,7 +58,7 @@ impl<'de: 'a, 'a> Deserialize<'de> for &'a Bytes {
     where
         D: Deserializer<'de>,
     {
-        Deserialize::deserialize(deserializer).map(Bytes::new)
+        serde::Deserialize::deserialize(deserializer).map(Bytes::new)
     }
 }
 
