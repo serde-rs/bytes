@@ -166,6 +166,7 @@ impl<'a, 'de: 'a> Deserialize<'de> for &'a Bytes {
     where
         D: Deserializer<'de>,
     {
+        // serde::Deserialize for &[u8] is already optimized, so simply forward to that.
         Deserialize::deserialize(deserializer).map(Bytes::new)
     }
 }

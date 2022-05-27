@@ -38,7 +38,7 @@ impl<'de: 'a, 'a> Deserialize<'de> for &'a [u8] {
     where
         D: Deserializer<'de>,
     {
-        // Via the serde::Deserialize impl for &[u8].
+        // serde::Deserialize for &[u8] is already optimized, so simply forward to that.
         serde::Deserialize::deserialize(deserializer)
     }
 }
@@ -58,6 +58,7 @@ impl<'de: 'a, 'a> Deserialize<'de> for &'a Bytes {
     where
         D: Deserializer<'de>,
     {
+        // serde::Deserialize for &[u8] is already optimized, so simply forward to that.
         serde::Deserialize::deserialize(deserializer).map(Bytes::new)
     }
 }
