@@ -2,7 +2,7 @@
 name = "serde_bytes"
 version = "0.11.6" # remember to update html_root_url
 authors = ["David Tolnay <dtolnay@gmail.com>"]
-categories = ["encoding"]
+categories = ["encoding", "no-std"]
 description = "Optimized handling of `&[u8]` and `Vec<u8>` for Serde"
 documentation = "https://docs.serde.rs/serde_bytes/"
 edition = "2018"
