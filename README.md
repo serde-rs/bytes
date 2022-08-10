@@ -1,10 +1,12 @@
-# serde\_bytes [![Build Status](https://img.shields.io/github/workflow/status/serde-rs/bytes/CI/master)](https://github.com/serde-rs/bytes/actions?query=branch%3Amaster) [![Latest Version](https://img.shields.io/crates/v/serde_bytes.svg)](https://crates.io/crates/serde_bytes)
+[![Latest Version](https://img.shields.io/crates/v/cs_serde_bytes.svg)](https://crates.io/crates/cs_serde_bytes)
 
-Wrapper types to enable optimized handling of `&[u8]` and `Vec<u8>`.
+## Disclaimer
+This crate is fork of [serde_bytes](https://github.com/serde-rs/bytes). The only differrence from the upstream is intentional no support for strings as bytes, making it more strict.
+
 
 ```toml
 [dependencies]
-serde_bytes = "0.11"
+serde_bytes = "0.13"
 ```
 
 ## Explanation
