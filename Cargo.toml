@@ -1,11 +1,11 @@
 [package]
 name = "cs_serde_bytes"
-version = "0.12.0" # remember to update html_root_url
+version = "0.12.1" # remember to update html_root_url
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 license = "MIT OR Apache-2.0"
 description = "Optimized handling of `&[u8]` and `Vec<u8>` for Serde"
-repository = "https://github.com/serde-rs/bytes"
-documentation = "https://docs.serde.rs/serde_bytes/"
+repository = "https://github.com/ChainSafe/serde-bytes"
+documentation = "https://docs.serde.rs/cs_serde_bytes/"
 keywords = ["serde", "serialization", "no_std"]
 categories = ["encoding"]
 readme = "README.md"

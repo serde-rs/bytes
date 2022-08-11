@@ -1,4 +1,4 @@
-use serde_bytes::{ByteBuf, Bytes};
+use cs_serde_bytes::{ByteBuf, Bytes};
 use serde_test::{assert_ser_tokens, assert_tokens, Token};
 
 #[test]

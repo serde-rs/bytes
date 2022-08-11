@@ -21,7 +21,7 @@ use serde::ser::{Serialize, Serializer};
 /// use std::collections::HashMap;
 /// use std::io;
 ///
-/// use serde_bytes::Bytes;
+/// use cs_serde_bytes::Bytes;
 ///
 /// fn print_encoded_cache() -> bincode::Result<()> {
 ///     let mut cache = HashMap::new();

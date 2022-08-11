@@ -7,8 +7,6 @@ use core::ops::{Deref, DerefMut};
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
-use alloc::string::String;
-#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 use serde::de::{Deserialize, Deserializer, Error, Visitor};
@@ -22,7 +20,7 @@ use crate::Bytes;
 /// use std::collections::HashMap;
 /// use std::io;
 ///
-/// use serde_bytes::ByteBuf;
+/// use cs_serde_bytes::ByteBuf;
 ///
 /// fn deserialize_bytebufs() -> bincode::Result<()> {
 ///     let example_data = [

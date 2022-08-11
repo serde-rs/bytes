@@ -19,10 +19,10 @@
 //!
 //! #[derive(Deserialize, Serialize)]
 //! struct Efficient<'a> {
-//!     #[serde(with = "serde_bytes")]
+//!     #[serde(with = "cs_serde_bytes")]
 //!     bytes: &'a [u8],
 //!
-//!     #[serde(with = "serde_bytes")]
+//!     #[serde(with = "cs_serde_bytes")]
 //!     byte_buf: Vec<u8>,
 //! }
 //! ```
@@ -58,8 +58,8 @@ pub use crate::bytebuf::ByteBuf;
 ///
 /// This function can be used with either of the following Serde attributes:
 ///
-/// - `#[serde(with = "serde_bytes")]`
-/// - `#[serde(serialize_with = "serde_bytes::serialize")]`
+/// - `#[serde(with = "cs_serde_bytes")]`
+/// - `#[serde(serialize_with = "cs_serde_bytes::serialize")]`
 ///
 /// ```
 /// # use serde_derive::Serialize;
@@ -67,10 +67,10 @@ pub use crate::bytebuf::ByteBuf;
 ///
 /// #[derive(Serialize)]
 /// struct Efficient<'a> {
-///     #[serde(with = "serde_bytes")]
+///     #[serde(with = "cs_serde_bytes")]
 ///     bytes: &'a [u8],
 ///
-///     #[serde(with = "serde_bytes")]
+///     #[serde(with = "cs_serde_bytes")]
 ///     byte_buf: Vec<u8>,
 /// }
 /// ```
@@ -86,8 +86,8 @@ where
 ///
 /// This function can be used with either of the following Serde attributes:
 ///
-/// - `#[serde(with = "serde_bytes")]`
-/// - `#[serde(deserialize_with = "serde_bytes::deserialize")]`
+/// - `#[serde(with = "cs_serde_bytes")]`
+/// - `#[serde(deserialize_with = "cs_serde_bytes::deserialize")]`
 ///
 /// ```
 /// # use serde_derive::Deserialize;
@@ -95,7 +95,7 @@ where
 ///
 /// #[derive(Deserialize)]
 /// struct Packet {
-///     #[serde(with = "serde_bytes")]
+///     #[serde(with = "cs_serde_bytes")]
 ///     payload: Vec<u8>,
 /// }
 /// ```

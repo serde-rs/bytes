@@ -15,8 +15,6 @@ use std::borrow::Cow;
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
-use alloc::string::String;
-#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 /// Types that can be deserialized via `#[serde(with = "serde_bytes")]`.
