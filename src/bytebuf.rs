@@ -1,17 +1,15 @@
 use core::borrow::{Borrow, BorrowMut};
-use core::cmp::{self, Ordering};
+use core::cmp::Ordering;
 use core::fmt::{self, Debug};
 use core::hash::{Hash, Hasher};
 use core::ops::{Deref, DerefMut};
 
-#[cfg(feature = "alloc")]
 use alloc::boxed::Box;
-#[cfg(feature = "alloc")]
-use alloc::string::String;
-#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
+#[cfg(feature = "serde")]
 use serde::de::{Deserialize, Deserializer, Error, SeqAccess, Visitor};
+#[cfg(feature = "serde")]
 use serde::ser::{Serialize, Serializer};
 
 use crate::Bytes;
@@ -182,6 +180,7 @@ impl<'a> IntoIterator for &'a mut ByteBuf {
     }
 }
 
+#[cfg(feature = "serde")]
 impl Serialize for ByteBuf {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -191,8 +190,10 @@ impl Serialize for ByteBuf {
     }
 }
 
+#[cfg(feature = "serde")]
 struct ByteBufVisitor;
 
+#[cfg(feature = "serde")]
 impl<'de> Visitor<'de> for ByteBufVisitor {
     type Value = ByteBuf;
 
@@ -204,7 +205,7 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
     where
         V: SeqAccess<'de>,
     {
-        let len = cmp::min(visitor.size_hint().unwrap_or(0), 4096);
+        let len = visitor.size_hint().unwrap_or(0).min(4096);
         let mut bytes = Vec::with_capacity(len);
 
         while let Some(b) = visitor.next_element()? {
@@ -235,7 +236,7 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
         Ok(ByteBuf::from(v))
     }
 
-    fn visit_string<E>(self, v: String) -> Result<ByteBuf, E>
+    fn visit_string<E>(self, v: alloc::string::String) -> Result<ByteBuf, E>
     where
         E: Error,
     {
@@ -243,6 +244,7 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
     }
 }
 
+#[cfg(feature = "serde")]
 impl<'de> Deserialize<'de> for ByteBuf {
     fn deserialize<D>(deserializer: D) -> Result<ByteBuf, D::Error>
     where

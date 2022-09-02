@@ -13,12 +13,12 @@ repository = "https://github.com/serde-rs/bytes"
 rust-version = "1.31"
 
 [features]
-default = ["std"]
-std = ["serde/std"]
-alloc = ["serde/alloc"]
+default = ["std", "serde"]
+std = ["alloc", "serde?/std"]
+alloc = ["serde?/alloc"]
 
 [dependencies]
-serde = { version = "1.0", default-features = false }
+serde = { version = "1.0", default-features = false, optional = true }
 
 [dev-dependencies]
 bincode = "1.0"

@@ -37,25 +37,30 @@
 )]
 
 mod bytes;
+#[cfg(feature = "serde")]
 mod de;
+#[cfg(feature = "serde")]
 mod ser;
 
-#[cfg(any(feature = "std", feature = "alloc"))]
+#[cfg(feature = "alloc")]
 mod bytebuf;
 
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-#[cfg(any(feature = "std", feature = "alloc"))]
+#[cfg(all(feature = "alloc", feature = "serde"))]
 use serde::Deserializer;
 
+#[cfg(feature = "serde")]
 use serde::Serializer;
 
 pub use crate::bytes::Bytes;
+#[cfg(feature = "serde")]
 pub use crate::de::Deserialize;
+#[cfg(feature = "serde")]
 pub use crate::ser::Serialize;
 
-#[cfg(any(feature = "std", feature = "alloc"))]
+#[cfg(feature = "alloc")]
 pub use crate::bytebuf::ByteBuf;
 
 /// Serde `serialize_with` function to serialize bytes efficiently.
@@ -78,6 +83,7 @@ pub use crate::bytebuf::ByteBuf;
 ///     byte_buf: Vec<u8>,
 /// }
 /// ```
+#[cfg(feature = "serde")]
 pub fn serialize<T, S>(bytes: &T, serializer: S) -> Result<S::Ok, S::Error>
 where
     T: ?Sized + Serialize,
@@ -103,7 +109,7 @@ where
 ///     payload: Vec<u8>,
 /// }
 /// ```
-#[cfg(any(feature = "std", feature = "alloc"))]
+#[cfg(all(feature = "alloc", feature = "serde"))]
 pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
 where
     T: Deserialize<'de>,

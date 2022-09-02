@@ -12,7 +12,9 @@ use alloc::boxed::Box;
 #[cfg(any(feature = "std", feature = "alloc"))]
 use crate::ByteBuf;
 
+#[cfg(feature = "serde")]
 use serde::de::{Deserialize, Deserializer};
+#[cfg(feature = "serde")]
 use serde::ser::{Serialize, Serializer};
 
 /// Wrapper around `[u8]` to serialize and deserialize efficiently.
@@ -152,6 +154,7 @@ impl<'a> IntoIterator for &'a mut Bytes {
     }
 }
 
+#[cfg(feature = "serde")]
 impl Serialize for Bytes {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -161,6 +164,7 @@ impl Serialize for Bytes {
     }
 }
 
+#[cfg(feature = "serde")]
 impl<'a, 'de: 'a> Deserialize<'de> for &'a Bytes {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
