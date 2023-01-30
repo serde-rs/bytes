@@ -43,6 +43,21 @@ impl<'de: 'a, 'a> Deserialize<'de> for &'a [u8] {
     }
 }
 
+impl<'de, const N: usize> Deserialize<'de> for [u8; N] {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        // serde::Deserialize for &[u8] is already optimized, so simply forward to that.
+        let as_ref: &[u8] = serde::Deserialize::deserialize(deserializer)?;
+        let mut owned = [0u8; N];
+        // DO NOT SUBMIT: This can panic, so what error should I return
+        // instead?
+        owned.copy_from_slice(as_ref);
+        Ok(owned)
+    }
+}
+
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl<'de> Deserialize<'de> for Vec<u8> {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>

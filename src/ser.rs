@@ -32,6 +32,15 @@ impl Serialize for [u8] {
     }
 }
 
+impl<const N: usize> Serialize for [u8; N] {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_bytes(self)
+    }
+}
+
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl Serialize for Vec<u8> {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
