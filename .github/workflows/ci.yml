@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust: [nightly, beta, stable, 1.36.0, 1.34.0, 1.31.0]
+        rust: [nightly, beta, stable, 1.56.0]
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v3
@@ -26,10 +26,8 @@ jobs:
         with:
           toolchain: ${{matrix.rust}}
       - run: cargo test
-        if: matrix.rust != '1.31.0' && matrix.rust != '1.34.0'
       - run: cargo check --no-default-features
       - run: cargo check --no-default-features --features alloc
-        if: matrix.rust != '1.31.0' && matrix.rust != '1.34.0'
 
   clippy:
     name: Clippy
