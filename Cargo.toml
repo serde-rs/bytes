@@ -1,6 +1,6 @@
 [package]
 name = "serde_bytes"
-version = "0.11.10" # remember to update html_root_url
+version = "0.11.11" # remember to update html_root_url
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 categories = ["encoding", "no-std", "no-std::no-alloc"]
 description = "Optimized handling of `&[u8]` and `Vec<u8>` for Serde"
