@@ -30,6 +30,16 @@ jobs:
       - run: cargo check --no-default-features
       - run: cargo check --no-default-features --features alloc
 
+  minimal:
+    name: Minimal versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@nightly
+      - run: cargo generate-lockfile -Z minimal-versions
+      - run: cargo check --locked
+
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
