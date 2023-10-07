@@ -31,6 +31,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![deny(missing_docs)]
 #![allow(
+    clippy::into_iter_without_iter,
     clippy::missing_errors_doc,
     clippy::must_use_candidate,
     clippy::needless_doctest_main
