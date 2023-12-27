@@ -37,7 +37,8 @@
     clippy::into_iter_without_iter,
     clippy::missing_errors_doc,
     clippy::must_use_candidate,
-    clippy::needless_doctest_main
+    clippy::needless_doctest_main,
+    clippy::ptr_as_ptr
 )]
 
 mod bytearray;
