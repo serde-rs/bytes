@@ -78,7 +78,7 @@ impl<'de, const N: usize> Deserialize<'de> for ByteArray<N> {
     where
         D: Deserializer<'de>,
     {
-        // Via the serde::Deserialize impl for ByteArray
+        // Via the serde::Deserialize impl for ByteArray.
         serde::Deserialize::deserialize(deserializer)
     }
 }

@@ -1,7 +1,7 @@
 use crate::Bytes;
 use core::borrow::{Borrow, BorrowMut};
 use core::cmp::Ordering;
-use core::convert::TryInto;
+use core::convert::TryInto as _;
 use core::fmt::{self, Debug};
 use core::hash::{Hash, Hasher};
 use core::ops::{Deref, DerefMut};
@@ -40,19 +40,12 @@ pub struct ByteArray<const N: usize> {
 }
 
 impl<const N: usize> ByteArray<N> {
-    /// Transform an [array](https://doc.rust-lang.org/stable/std/primitive.array.html) to the equivalent `ByteArray`
+    /// Wrap an existing [array] into a `ByteArray`.
     pub fn new(bytes: [u8; N]) -> Self {
-        Self { bytes }
+        ByteArray { bytes }
     }
 
-    /// Wrap existing bytes into a `ByteArray`
-    pub fn from<T: Into<[u8; N]>>(bytes: T) -> Self {
-        Self {
-            bytes: bytes.into(),
-        }
-    }
-
-    /// Unwraps the byte array underlying this `ByteArray`
+    /// Unwrap the byte array underlying this `ByteArray`.
     pub fn into_array(self) -> [u8; N] {
         self.bytes
     }
@@ -69,6 +62,7 @@ impl<const N: usize> AsRef<[u8; N]> for ByteArray<N> {
         &self.bytes
     }
 }
+
 impl<const N: usize> AsMut<[u8; N]> for ByteArray<N> {
     fn as_mut(&mut self) -> &mut [u8; N] {
         &mut self.bytes
@@ -80,6 +74,7 @@ impl<const N: usize> Borrow<[u8; N]> for ByteArray<N> {
         &self.bytes
     }
 }
+
 impl<const N: usize> BorrowMut<[u8; N]> for ByteArray<N> {
     fn borrow_mut(&mut self) -> &mut [u8; N] {
         &mut self.bytes
@@ -193,7 +188,7 @@ impl<'de, const N: usize> Visitor<'de> for ByteArrayVisitor<N> {
                 .ok_or_else(|| V::Error::invalid_length(idx, &self))?;
         }
 
-        Ok(ByteArray::from(bytes))
+        Ok(ByteArray::new(bytes))
     }
 
     fn visit_bytes<E>(self, v: &[u8]) -> Result<ByteArray<N>, E>
