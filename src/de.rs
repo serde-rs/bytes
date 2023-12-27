@@ -83,6 +83,16 @@ impl<'de, const N: usize> Deserialize<'de> for ByteArray<N> {
     }
 }
 
+impl<'de: 'a, 'a, const N: usize> Deserialize<'de> for &'a ByteArray<N> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        // Via the serde::Deserialize impl for &ByteArray.
+        serde::Deserialize::deserialize(deserializer)
+    }
+}
+
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl<'de> Deserialize<'de> for ByteBuf {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>

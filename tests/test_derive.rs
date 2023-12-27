@@ -23,6 +23,9 @@ struct Test<'a> {
     byte_array: ByteArray<314>,
 
     #[serde(with = "serde_bytes")]
+    borrowed_byte_array: &'a ByteArray<314>,
+
+    #[serde(with = "serde_bytes")]
     byte_buf: ByteBuf,
 
     #[serde(with = "serde_bytes")]
@@ -67,6 +70,7 @@ fn test() {
         vec: b"...".to_vec(),
         bytes: Bytes::new(b"..."),
         byte_array: ByteArray::new([0; 314]),
+        borrowed_byte_array: &ByteArray::new([0; 314]),
         byte_buf: ByteBuf::from(b"...".as_ref()),
         cow_slice: Cow::Borrowed(b"..."),
         cow_bytes: Cow::Borrowed(Bytes::new(b"...")),
@@ -84,7 +88,7 @@ fn test() {
         &[
             Token::Struct {
                 name: "Test",
-                len: 15,
+                len: 16,
             },
             Token::Str("slice"),
             Token::BorrowedBytes(b"..."),
@@ -96,6 +100,8 @@ fn test() {
             Token::BorrowedBytes(b"..."),
             Token::Str("byte_array"),
             Token::Bytes(&[0; 314]),
+            Token::Str("borrowed_byte_array"),
+            Token::BorrowedBytes(&[0; 314]),
             Token::Str("byte_buf"),
             Token::Bytes(b"..."),
             Token::Str("cow_slice"),
