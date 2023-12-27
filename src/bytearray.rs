@@ -35,6 +35,7 @@ use serde::ser::{Serialize, Serializer};
 /// # }
 /// ```
 #[derive(Copy, Clone, Eq, Ord)]
+#[cfg_attr(not(doc), repr(transparent))]
 pub struct ByteArray<const N: usize> {
     bytes: [u8; N],
 }
@@ -48,6 +49,10 @@ impl<const N: usize> ByteArray<N> {
     /// Unwrap the byte array underlying this `ByteArray`.
     pub fn into_array(self) -> [u8; N] {
         self.bytes
+    }
+
+    fn from_ref(bytes: &[u8; N]) -> &Self {
+        unsafe { &*(bytes as *const [u8; N] as *const ByteArray<N>) }
     }
 }
 
@@ -216,5 +221,41 @@ impl<'de, const N: usize> Deserialize<'de> for ByteArray<N> {
         D: Deserializer<'de>,
     {
         deserializer.deserialize_bytes(ByteArrayVisitor::<N>)
+    }
+}
+
+struct BorrowedByteArrayVisitor<const N: usize>;
+
+impl<'de, const N: usize> Visitor<'de> for BorrowedByteArrayVisitor<N> {
+    type Value = &'de ByteArray<N>;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        write!(formatter, "a borrowed byte array of length {}", N)
+    }
+
+    fn visit_borrowed_bytes<E>(self, v: &'de [u8]) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        let borrowed_byte_array: &'de [u8; N] = v
+            .try_into()
+            .map_err(|_| E::invalid_length(v.len(), &self))?;
+        Ok(ByteArray::from_ref(borrowed_byte_array))
+    }
+
+    fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        self.visit_borrowed_bytes(v.as_bytes())
+    }
+}
+
+impl<'a, 'de: 'a, const N: usize> Deserialize<'de> for &'a ByteArray<N> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        deserializer.deserialize_bytes(BorrowedByteArrayVisitor::<N>)
     }
 }
