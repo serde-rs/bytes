@@ -52,10 +52,7 @@ mod bytebuf;
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-#[cfg(any(feature = "std", feature = "alloc"))]
-use serde::Deserializer;
-
-use serde::Serializer;
+use serde::{Deserializer, Serializer};
 
 pub use crate::bytearray::ByteArray;
 pub use crate::bytes::Bytes;
@@ -116,7 +113,6 @@ where
 ///     byte_array: [u8; 314],
 /// }
 /// ```
-#[cfg(any(feature = "std", feature = "alloc"))]
 pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
 where
     T: Deserialize<'de>,
