@@ -78,8 +78,8 @@ impl<'de, const N: usize> Deserialize<'de> for &'de [u8; N] {
     where
         D: Deserializer<'de>,
     {
-        let arr: &'de ByteArray<N> = serde::Deserialize::deserialize(deserializer)?;
-        Ok(&arr)
+        let arr: &ByteArray<N> = serde::Deserialize::deserialize(deserializer)?;
+        Ok(arr)
     }
 }
 
