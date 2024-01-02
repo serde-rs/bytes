@@ -73,6 +73,16 @@ impl<'de, const N: usize> Deserialize<'de> for [u8; N] {
     }
 }
 
+impl<'de, const N: usize> Deserialize<'de> for &'de [u8; N] {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let arr: &'de ByteArray<N> = serde::Deserialize::deserialize(deserializer)?;
+        Ok(&arr)
+    }
+}
+
 impl<'de, const N: usize> Deserialize<'de> for ByteArray<N> {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
