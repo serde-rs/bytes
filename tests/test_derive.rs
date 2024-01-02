@@ -14,6 +14,9 @@ struct Test<'a> {
     array: [u8; 314],
 
     #[serde(with = "serde_bytes")]
+    borrowed_array: &'a [u8; 314],
+
+    #[serde(with = "serde_bytes")]
     vec: Vec<u8>,
 
     #[serde(with = "serde_bytes")]
@@ -67,6 +70,7 @@ fn test() {
     let test = Test {
         slice: b"...",
         array: [0; 314],
+        borrowed_array: &[1; 314],
         vec: b"...".to_vec(),
         bytes: Bytes::new(b"..."),
         byte_array: ByteArray::new([0; 314]),
@@ -88,12 +92,14 @@ fn test() {
         &[
             Token::Struct {
                 name: "Test",
-                len: 16,
+                len: 17,
             },
             Token::Str("slice"),
             Token::BorrowedBytes(b"..."),
             Token::Str("array"),
             Token::Bytes(&[0; 314]),
+            Token::Str("borrowed_array"),
+            Token::BorrowedBytes(&[1; 314]),
             Token::Str("vec"),
             Token::Bytes(b"..."),
             Token::Str("bytes"),
