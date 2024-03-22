@@ -37,7 +37,7 @@ use serde::ser::{Serialize, Serializer};
 /// # }
 /// ```
 #[derive(Eq, Ord)]
-#[cfg_attr(not(doc), repr(transparent))]
+#[repr(transparent)]
 pub struct Bytes {
     bytes: [u8],
 }
