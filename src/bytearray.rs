@@ -35,7 +35,7 @@ use serde::ser::{Serialize, Serializer};
 /// # }
 /// ```
 #[derive(Copy, Clone, Eq, Ord)]
-#[cfg_attr(not(doc), repr(transparent))]
+#[repr(transparent)]
 pub struct ByteArray<const N: usize> {
     bytes: [u8; N],
 }
