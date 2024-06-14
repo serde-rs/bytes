@@ -170,7 +170,7 @@ fn test_default() {
 
     let bytes = [255u8; 4];
     test.byte_array = bytes.into();
-    test.bytes = bytes.as_slice().into();
+    test.bytes = (&bytes[..]).into();
     test.byte_buf = bytes.into();
 
     assert_tokens(
