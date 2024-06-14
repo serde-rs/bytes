@@ -81,6 +81,12 @@ impl DerefMut for Bytes {
     }
 }
 
+impl<'a> From<&'a [u8]> for &'a Bytes {
+    fn from(bytes: &'a [u8]) -> Self {
+        Bytes::new(bytes)
+    }
+}
+
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl ToOwned for Bytes {
     type Owned = ByteBuf;

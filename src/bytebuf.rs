@@ -131,6 +131,17 @@ impl BorrowMut<Bytes> for ByteBuf {
     }
 }
 
+impl<T> From<T> for ByteBuf
+where
+    T: Into<Vec<u8>>,
+{
+    fn from(bytes: T) -> Self {
+        ByteBuf {
+            bytes: bytes.into(),
+        }
+    }
+}
+
 impl<Rhs> PartialEq<Rhs> for ByteBuf
 where
     Rhs: ?Sized + AsRef<[u8]>,

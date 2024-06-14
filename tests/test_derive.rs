@@ -138,3 +138,55 @@ fn test() {
         ],
     );
 }
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Default)]
+struct TestFrom<'a> {
+    #[serde(borrow)]
+    bytes: &'a Bytes,
+    byte_array: ByteArray<4>,
+    byte_buf: ByteBuf,
+}
+
+#[test]
+fn test_default() {
+    let mut test = TestFrom::default();
+
+    assert_tokens(
+        &test,
+        &[
+            Token::Struct {
+                name: "TestFrom",
+                len: 3,
+            },
+            Token::Str("bytes"),
+            Token::BorrowedBytes(b""),
+            Token::Str("byte_array"),
+            Token::Bytes(&[0; 4]),
+            Token::Str("byte_buf"),
+            Token::Bytes(b""),
+            Token::StructEnd,
+        ],
+    );
+
+    let bytes = [255u8; 4];
+    test.byte_array = bytes.into();
+    test.bytes = bytes.as_slice().into();
+    test.byte_buf = bytes.into();
+
+    assert_tokens(
+        &test,
+        &[
+            Token::Struct {
+                name: "TestFrom",
+                len: 3,
+            },
+            Token::Str("bytes"),
+            Token::BorrowedBytes(b"\xff\xff\xff\xff"),
+            Token::Str("byte_array"),
+            Token::Bytes(&[255u8; 4]),
+            Token::Str("byte_buf"),
+            Token::Bytes(b"\xff\xff\xff\xff"),
+            Token::StructEnd,
+        ],
+    );
+}
