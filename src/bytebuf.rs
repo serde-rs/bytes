@@ -131,14 +131,9 @@ impl BorrowMut<Bytes> for ByteBuf {
     }
 }
 
-impl<T> From<T> for ByteBuf
-where
-    T: Into<Vec<u8>>,
-{
-    fn from(bytes: T) -> Self {
-        ByteBuf {
-            bytes: bytes.into(),
-        }
+impl From<Vec<u8>> for ByteBuf {
+    fn from(bytes: Vec<u8>) -> Self {
+        ByteBuf { bytes: bytes }
     }
 }
 

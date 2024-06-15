@@ -148,7 +148,7 @@ struct TestFrom<'a> {
 }
 
 #[test]
-fn test_default() {
+fn test_from() {
     let mut test = TestFrom::default();
 
     assert_tokens(
@@ -171,7 +171,7 @@ fn test_default() {
     let bytes = [255u8; 4];
     test.byte_array = bytes.into();
     test.bytes = (&bytes[..]).into();
-    test.byte_buf = bytes.into();
+    test.byte_buf = bytes.to_vec().into();
 
     assert_tokens(
         &test,
