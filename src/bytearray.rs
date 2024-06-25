@@ -42,12 +42,12 @@ pub struct ByteArray<const N: usize> {
 
 impl<const N: usize> ByteArray<N> {
     /// Wrap an existing [array] into a `ByteArray`.
-    pub fn new(bytes: [u8; N]) -> Self {
+    pub const fn new(bytes: [u8; N]) -> Self {
         ByteArray { bytes }
     }
 
     /// Unwrap the byte array underlying this `ByteArray`.
-    pub fn into_array(self) -> [u8; N] {
+    pub const fn into_array(self) -> [u8; N] {
         self.bytes
     }
 
