@@ -133,7 +133,7 @@ impl BorrowMut<Bytes> for ByteBuf {
 
 impl From<Vec<u8>> for ByteBuf {
     fn from(bytes: Vec<u8>) -> Self {
-        ByteBuf { bytes: bytes }
+        ByteBuf { bytes }
     }
 }
 
