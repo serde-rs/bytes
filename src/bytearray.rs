@@ -62,6 +62,12 @@ impl<const N: usize> Debug for ByteArray<N> {
     }
 }
 
+impl<const N: usize> Default for ByteArray<N> {
+    fn default() -> Self {
+        ByteArray { bytes: [0; N] }
+    }
+}
+
 impl<const N: usize> AsRef<[u8; N]> for ByteArray<N> {
     fn as_ref(&self) -> &[u8; N] {
         &self.bytes
@@ -109,6 +115,12 @@ impl<const N: usize> Borrow<Bytes> for ByteArray<N> {
 impl<const N: usize> BorrowMut<Bytes> for ByteArray<N> {
     fn borrow_mut(&mut self) -> &mut Bytes {
         unsafe { &mut *(&mut self.bytes as &mut [u8] as *mut [u8] as *mut Bytes) }
+    }
+}
+
+impl<const N: usize> From<[u8; N]> for ByteArray<N> {
+    fn from(bytes: [u8; N]) -> Self {
+        ByteArray { bytes }
     }
 }
 
