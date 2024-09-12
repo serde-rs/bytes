@@ -4,6 +4,9 @@ use core::fmt::{self, Debug};
 use core::hash::{Hash, Hasher};
 use core::ops::{Deref, DerefMut};
 
+pub use base64::DecodeError;
+use base64::prelude::{Engine as _, BASE64_STANDARD};
+
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
@@ -84,6 +87,10 @@ impl ByteBuf {
     #[allow(clippy::should_implement_trait)]
     pub fn into_iter(self) -> <Vec<u8> as IntoIterator>::IntoIter {
         self.bytes.into_iter()
+    }
+
+    fn decode(bytes: &[u8]) -> Result<Self, DecodeError> {
+        Ok(Self { bytes: BASE64_STANDARD.decode(bytes)? })
     }
 }
 
@@ -193,7 +200,12 @@ impl Serialize for ByteBuf {
     where
         S: Serializer,
     {
-        serializer.serialize_bytes(&self.bytes)
+        if serializer.is_human_readable() {
+            let encoded = BASE64_STANDARD.encode(&self.bytes);
+            String::serialize(&encoded, serializer)
+        } else {
+            serializer.serialize_bytes(&self.bytes)
+        }
     }
 }
 
@@ -249,11 +261,54 @@ impl<'de> Visitor<'de> for ByteBufVisitor {
     }
 }
 
+struct Base64Visitor;
+
+impl<'de> Visitor<'de> for Base64Visitor {
+    type Value = ByteBuf;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        formatter.write_str("base64-encoded string")
+    }
+
+    fn visit_bytes<E>(self, v: &[u8]) -> Result<ByteBuf, E>
+    where
+        E: Error,
+    {
+        ByteBuf::decode(v).map_err(serde::de::Error::custom)
+    }
+
+    fn visit_byte_buf<E>(self, v: Vec<u8>) -> Result<ByteBuf, E>
+    where
+        E: Error,
+    {
+        ByteBuf::decode(v.as_slice()).map_err(serde::de::Error::custom)
+    }
+
+    fn visit_str<E>(self, v: &str) -> Result<ByteBuf, E>
+    where
+        E: Error,
+    {
+        ByteBuf::decode(v.as_bytes()).map_err(serde::de::Error::custom)
+    }
+
+    fn visit_string<E>(self, v: String) -> Result<ByteBuf, E>
+    where
+        E: Error,
+    {
+        ByteBuf::decode(v.as_bytes()).map_err(serde::de::Error::custom)
+    }
+}
+
+
 impl<'de> Deserialize<'de> for ByteBuf {
     fn deserialize<D>(deserializer: D) -> Result<ByteBuf, D::Error>
     where
         D: Deserializer<'de>,
     {
-        deserializer.deserialize_byte_buf(ByteBufVisitor)
+        if deserializer.is_human_readable() {
+            deserializer.deserialize_str(Base64Visitor)
+        } else {
+            deserializer.deserialize_byte_buf(ByteBufVisitor)
+        }
     }
 }
