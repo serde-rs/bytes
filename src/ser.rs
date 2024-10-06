@@ -99,7 +99,7 @@ impl<'a> Serialize for Cow<'a, Bytes> {
     }
 }
 
-impl<'a, T> Serialize for &'a T
+impl<T> Serialize for &T
 where
     T: ?Sized + Serialize,
 {
