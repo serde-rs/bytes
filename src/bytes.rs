@@ -32,7 +32,7 @@ use serde::ser::{Serialize, Serializer};
 ///     bincode::serde::encode_into_std_write(
 ///         &cache,
 ///         &mut io::stdout(),
-///         bincode::config::legacy(),
+///         bincode::config::standard(),
 ///     )?;
 ///
 ///     Ok(())
