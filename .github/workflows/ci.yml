@@ -19,16 +19,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust: [nightly, beta, stable, 1.68.0]
+        rust: [nightly, beta, stable, 1.85.0, 1.68.0]
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{matrix.rust}}
-      - run: cargo test
       - run: cargo check --no-default-features
       - run: cargo check --no-default-features --features alloc
+      - run: cargo test
+        if: matrix.rust != '1.68.0'
       - uses: actions/upload-artifact@v4
         if: matrix.rust == 'nightly' && always()
         with:
