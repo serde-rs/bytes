@@ -9,7 +9,7 @@ edition = "2018"
 keywords = ["serde", "serialization", "no_std", "bytes"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/serde-rs/bytes"
-rust-version = "1.53"
+rust-version = "1.68"
 
 [features]
 default = ["std"]
