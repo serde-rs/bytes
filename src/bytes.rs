@@ -23,13 +23,19 @@ use serde::ser::{Serialize, Serializer};
 ///
 /// use serde_bytes::Bytes;
 ///
-/// fn print_encoded_cache() -> bincode::Result<()> {
+/// fn print_encoded_cache() -> Result<(), bincode::error::EncodeError> {
 ///     let mut cache = HashMap::new();
 ///     cache.insert(3, Bytes::new(b"three"));
 ///     cache.insert(2, Bytes::new(b"two"));
 ///     cache.insert(1, Bytes::new(b"one"));
 ///
-///     bincode::serialize_into(&mut io::stdout(), &cache)
+///     bincode::serde::encode_into_std_write(
+///         &cache,
+///         &mut io::stdout(),
+///         bincode::config::legacy(),
+///     )?;
+///
+///     Ok(())
 /// }
 /// #
 /// # fn main() {

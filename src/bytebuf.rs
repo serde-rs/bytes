@@ -24,12 +24,16 @@ use crate::Bytes;
 ///
 /// use serde_bytes::ByteBuf;
 ///
-/// fn deserialize_bytebufs() -> bincode::Result<()> {
+/// fn deserialize_bytebufs() -> Result<(), bincode::error::DecodeError> {
 ///     let example_data = [
 ///         2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 116,
 ///         119, 111, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 111, 110, 101];
 ///
-///     let map: HashMap<u32, ByteBuf> = bincode::deserialize(&example_data[..])?;
+///     let map: HashMap<u32, ByteBuf>;
+///     (map, _) = bincode::serde::decode_from_slice(
+///         &example_data,
+///         bincode::config::legacy(),
+///     )?;
 ///
 ///     println!("{:?}", map);
 ///
