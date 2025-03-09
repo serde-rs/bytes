@@ -190,7 +190,7 @@ impl<'de, const N: usize> Visitor<'de> for ByteArrayVisitor<N> {
     type Value = ByteArray<N>;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        write!(formatter, "a byte array of length {}", N)
+        write!(formatter, "a byte array of length {N}")
     }
 
     fn visit_seq<V>(self, mut seq: V) -> Result<ByteArray<N>, V::Error>
@@ -242,7 +242,7 @@ impl<'de, const N: usize> Visitor<'de> for BorrowedByteArrayVisitor<N> {
     type Value = &'de ByteArray<N>;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        write!(formatter, "a borrowed byte array of length {}", N)
+        write!(formatter, "a borrowed byte array of length {N}")
     }
 
     fn visit_borrowed_bytes<E>(self, v: &'de [u8]) -> Result<Self::Value, E>
