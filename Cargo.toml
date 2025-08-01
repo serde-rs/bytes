@@ -15,7 +15,7 @@ rust-version = "1.68"
 default = ["std"]
 std = ["serde/std"]
 alloc = ["serde/alloc"]
-heapless = ["dep:heapless", "heapless/serde"]
+heapless = ["dep:heapless"]
 
 [dependencies]
 serde = { version = "1.0.166", default-features = false }
