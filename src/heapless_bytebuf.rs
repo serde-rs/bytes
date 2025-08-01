@@ -91,7 +91,7 @@ pub struct HeaplessByteBufFullError<const N: usize>;
 
 impl<const N: usize> Display for HeaplessByteBufFullError<N> {
     fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
-        write!(f, "heapless::Vec is too small")
+        write!(f, "heapless::Vec<{N}> is too small")
     }
 }
 
@@ -266,6 +266,6 @@ impl<'de, const N: usize> Deserialize<'de> for HeaplessByteBuf<N> {
     where
         D: Deserializer<'de>,
     {
-        deserializer.deserialize_byte_buf(HeaplessByteBufVisitor::<N>)
+        deserializer.deserialize_bytes(HeaplessByteBufVisitor::<N>)
     }
 }
