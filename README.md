@@ -21,6 +21,12 @@ in `serde_bytes::ByteBuf`.
 Additionally this crate supports the Serde `with` attribute to enable efficient
 handling of `&[u8]` and `Vec<u8>` in structs without needing a wrapper type.
 
+This approach also works with `heapless::Vec<u8, N>`, which is useful
+where the size of data has a maxmimum bound but isn't an exact size. Use
+the `heapless` feature to enable support. You can also opt into special
+handling in this case by wrapping the `heapless::Vec` with
+`serde_bytes::HeaplessByteBuf`.
+
 ## Example
 
 ```rust
