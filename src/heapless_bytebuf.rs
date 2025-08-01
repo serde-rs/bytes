@@ -1,9 +1,9 @@
 use core::borrow::{Borrow, BorrowMut};
 use core::cmp::Ordering;
+use core::convert::TryFrom;
 use core::fmt::{self, Debug, Display, Formatter};
 use core::hash::{Hash, Hasher};
 use core::ops::{Deref, DerefMut};
-use core::convert::TryFrom;
 
 use heapless::Vec;
 
@@ -46,9 +46,7 @@ pub struct HeaplessByteBuf<const N: usize> {
 impl<const N: usize> HeaplessByteBuf<N> {
     /// Construct a `HeaplessByteBuf`.
     pub fn new() -> Self {
-        HeaplessByteBuf {
-            bytes: Vec::new(),
-        }
+        HeaplessByteBuf { bytes: Vec::new() }
     }
 
     /// Wrap existing bytes in a `HeaplessByteBuf`.
@@ -60,24 +58,20 @@ impl<const N: usize> HeaplessByteBuf<N> {
 
     /// Wrap existing bytes in a `HeaplessByteBuf`.
     pub fn try_from_slice(bytes: &[u8]) -> Result<Self, HeaplessByteBufFullError<N>> {
-        let bytes = Vec::from_slice(bytes)
-            .map_err(|_| HeaplessByteBufFullError::<N> )?;
+        let bytes = Vec::from_slice(bytes).map_err(|_| HeaplessByteBufFullError::<N>)?;
 
-        Ok(HeaplessByteBuf {
-            bytes,
-        })
+        Ok(HeaplessByteBuf { bytes })
     }
 
     /// Wrap existing bytes in a `HeaplessByteBuf`.
     #[cfg(feature = "alloc")]
-    pub fn try_from<T: Into<alloc::vec::Vec<u8>>>(vec: T) -> Result<Self, HeaplessByteBufFullError<N>> {
+    pub fn try_from<T: Into<alloc::vec::Vec<u8>>>(
+        vec: T,
+    ) -> Result<Self, HeaplessByteBufFullError<N>> {
         let std_vec = vec.into();
-        let bytes = Vec::from_slice(&std_vec)
-            .map_err(|_| HeaplessByteBufFullError::<N> )?;
+        let bytes = Vec::from_slice(&std_vec).map_err(|_| HeaplessByteBufFullError::<N>)?;
 
-        Ok(HeaplessByteBuf {
-            bytes,
-        })
+        Ok(HeaplessByteBuf { bytes })
     }
 
     /// Unwrap the vector of byte underlying this `HeaplessByteBuf`.
@@ -248,11 +242,10 @@ impl<'de, const N: usize> Visitor<'de> for HeaplessByteBufVisitor<N> {
     where
         E: Error,
     {
-        HeaplessByteBuf::try_from_slice(v)
-            .map_err(|_| {
-                let expected: &str = &format!("{N}");
-                Error::invalid_length(v.len(), &expected)
-            })
+        HeaplessByteBuf::try_from_slice(v).map_err(|_| {
+            let expected: &str = &format!("{N}");
+            Error::invalid_length(v.len(), &expected)
+        })
     }
 
     #[cfg(feature = "alloc")]
@@ -261,11 +254,10 @@ impl<'de, const N: usize> Visitor<'de> for HeaplessByteBufVisitor<N> {
         E: Error,
     {
         let len = v.len();
-        HeaplessByteBuf::try_from(v)
-            .map_err(|_| {
-                let expected: &str = &format!("{N}");
-                Error::invalid_length(len, &expected)
-            })
+        HeaplessByteBuf::try_from(v).map_err(|_| {
+            let expected: &str = &format!("{N}");
+            Error::invalid_length(len, &expected)
+        })
     }
 
     // TODO: &str
