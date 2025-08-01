@@ -7,6 +7,9 @@ use serde::Deserializer;
 #[cfg(any(feature = "std", feature = "alloc"))]
 use crate::ByteBuf;
 
+#[cfg(feature = "heapless")]
+use crate::HeaplessByteBuf;
+
 #[cfg(any(feature = "std", feature = "alloc"))]
 use core::cmp;
 
@@ -50,6 +53,16 @@ impl<'de> Deserialize<'de> for Vec<u8> {
         D: Deserializer<'de>,
     {
         Deserialize::deserialize(deserializer).map(ByteBuf::into_vec)
+    }
+}
+
+#[cfg(feature = "heapless")]
+impl<'de, const N: usize> Deserialize<'de> for heapless::Vec<u8, N> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Deserialize::deserialize(deserializer).map(HeaplessByteBuf::into_inner)
     }
 }
 
@@ -105,6 +118,17 @@ impl<'de: 'a, 'a, const N: usize> Deserialize<'de> for &'a ByteArray<N> {
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl<'de> Deserialize<'de> for ByteBuf {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        // Via the serde::Deserialize impl for ByteBuf.
+        serde::Deserialize::deserialize(deserializer)
+    }
+}
+
+#[cfg(feature = "heapless")]
+impl<'de, const N: usize> Deserialize<'de> for HeaplessByteBuf<N> {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,

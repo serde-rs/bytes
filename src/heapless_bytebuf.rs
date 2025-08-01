@@ -147,7 +147,6 @@ impl<const N: usize> BorrowMut<Bytes> for HeaplessByteBuf<N> {
     }
 }
 
-
 #[cfg(feature = "alloc")]
 impl<const N: usize> TryFrom<alloc::vec::Vec<u8>> for HeaplessByteBuf<N> {
     type Error = HeaplessByteBufFullError<N>;
