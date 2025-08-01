@@ -259,8 +259,6 @@ impl<'de, const N: usize> Visitor<'de> for HeaplessByteBufVisitor<N> {
             Error::invalid_length(len, &expected)
         })
     }
-
-    // TODO: &str
 }
 
 impl<'de, const N: usize> Deserialize<'de> for HeaplessByteBuf<N> {

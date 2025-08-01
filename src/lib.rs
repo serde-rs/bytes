@@ -13,6 +13,12 @@
 //! efficient handling of `&[u8]` and `Vec<u8>` in structs without needing a
 //! wrapper type.
 //!
+//! This approach also works with `heapless::Vec<u8, N>`, which is useful
+//! where the size of data has a maxmimum bound but isn't an exact size. Use
+//! the `heapless` feature to enable support. You can also opt into special
+//! handling in this case by wrapping the `heapless::Vec` with
+//! `serde_bytes::HeaplessByteBuf`.
+//!
 //! ```
 //! # use serde_derive::{Deserialize, Serialize};
 //! use serde::{Deserialize, Serialize};
@@ -27,6 +33,10 @@
 //!
 //!     #[serde(with = "serde_bytes")]
 //!     byte_array: [u8; 314],
+//!
+//!     #[cfg(feature = "heapless")]
+//!     #[serde(with = "serde_bytes")]
+//!     heapless_byte_buf: heapless::Vec<u8, 314>,
 //! }
 //! ```
 
@@ -91,6 +101,10 @@ pub use crate::heapless_bytebuf::HeaplessByteBuf;
 ///
 ///     #[serde(with = "serde_bytes")]
 ///     byte_array: [u8; 314],
+///
+///     #[cfg(feature = "heapless")]
+///     #[serde(with = "serde_bytes")]
+///     heapless_byte_buf: heapless::Vec<u8, 314>,
 /// }
 /// ```
 pub fn serialize<T, S>(bytes: &T, serializer: S) -> Result<S::Ok, S::Error>
@@ -119,6 +133,10 @@ where
 ///
 ///     #[serde(with = "serde_bytes")]
 ///     byte_array: [u8; 314],
+///
+///     #[cfg(feature = "heapless")]
+///     #[serde(with = "serde_bytes")]
+///     heapless_payload: heapless::Vec<u8, 314>,
 /// }
 /// ```
 pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
