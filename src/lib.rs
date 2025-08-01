@@ -51,6 +51,9 @@ mod ser;
 #[cfg(any(feature = "std", feature = "alloc"))]
 mod bytebuf;
 
+#[cfg(feature = "heapless")]
+mod heapless_bytebuf;
+
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
@@ -63,6 +66,9 @@ pub use crate::ser::Serialize;
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub use crate::bytebuf::ByteBuf;
+
+#[cfg(feature = "heapless")]
+pub use crate::heapless_bytebuf::HeaplessByteBuf;
 
 /// Serde `serialize_with` function to serialize bytes efficiently.
 ///
