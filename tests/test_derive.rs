@@ -5,6 +5,9 @@ use serde_derive::{Deserialize, Serialize};
 use serde_test::{assert_tokens, Token};
 use std::borrow::Cow;
 
+#[cfg(feature = "heapless")]
+use serde_bytes::HeaplessByteBuf;
+
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 struct Test<'a> {
     #[serde(with = "serde_bytes")]
@@ -57,6 +60,14 @@ struct Test<'a> {
 
     #[serde(with = "serde_bytes")]
     opt_cow_slice: Option<Cow<'a, [u8]>>,
+
+    #[cfg(feature = "heapless")]
+    #[serde(with = "serde_bytes")]
+    heapless_byte_buf: HeaplessByteBuf<314>,
+
+    #[cfg(feature = "heapless")]
+    #[serde(with = "serde_bytes")]
+    heapless_vec: heapless::Vec<u8, 314>,
 }
 
 #[derive(Serialize)]
@@ -86,6 +97,12 @@ fn test() {
         opt_array: Some([0; 314]),
         opt_bytearray: Some(ByteArray::new([0; 314])),
         opt_cow_slice: Some(Cow::Borrowed(b"...")),
+        #[cfg(feature = "heapless")]
+        heapless_byte_buf: HeaplessByteBuf::try_from(b"...".as_ref())
+            .expect("Size of tested `HeaplessByteBuf`to be >= size of test data"),
+        #[cfg(feature = "heapless")]
+        heapless_vec: heapless::Vec::from_slice(b"...".as_ref())
+            .expect("Size of tested `heapless::Vec` to be >= size of test data"),
     };
 
     assert_tokens(
@@ -93,7 +110,10 @@ fn test() {
         &[
             Token::Struct {
                 name: "Test",
+                #[cfg(not(feature = "heapless"))]
                 len: 17,
+                #[cfg(feature = "heapless")]
+                len: 19,
             },
             Token::Str("slice"),
             Token::BorrowedBytes(b"..."),
@@ -133,6 +153,14 @@ fn test() {
             Token::Bytes(&[0; 314]),
             Token::Str("opt_cow_slice"),
             Token::Some,
+            Token::BorrowedBytes(b"..."),
+            #[cfg(feature = "heapless")]
+            Token::Str("heapless_byte_buf"),
+            #[cfg(feature = "heapless")]
+            Token::BorrowedBytes(b"..."),
+            #[cfg(feature = "heapless")]
+            Token::Str("heapless_vec"),
+            #[cfg(feature = "heapless")]
             Token::BorrowedBytes(b"..."),
             Token::StructEnd,
         ],

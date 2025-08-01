@@ -2,11 +2,19 @@
 
 use serde_bytes::{ByteArray, ByteBuf, Bytes};
 
+#[cfg(feature = "heapless")]
+use serde_bytes::HeaplessByteBuf;
+
 fn _bytes_eq_slice(bytes: &Bytes, slice: &[u8]) -> bool {
     bytes == slice
 }
 
 fn _bytebuf_eq_vec(bytebuf: ByteBuf, vec: Vec<u8>) -> bool {
+    bytebuf == vec
+}
+
+#[cfg(feature = "heapless")]
+fn _heapless_bytebuf_eq_vec<const N: usize>(bytebuf: HeaplessByteBuf<N>, vec: Vec<u8>) -> bool {
     bytebuf == vec
 }
 
