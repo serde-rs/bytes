@@ -64,7 +64,7 @@ impl<const N: usize> HeaplessByteBuf<N> {
     }
 
     /// Wrap existing bytes in a `HeaplessByteBuf`.
-    #[cfg(feature = "alloc")]
+    #[cfg(any(feature = "std", feature = "alloc"))]
     pub fn try_from<T: Into<alloc::vec::Vec<u8>>>(
         vec: T,
     ) -> Result<Self, HeaplessByteBufFullError<N>> {
@@ -141,7 +141,7 @@ impl<const N: usize> BorrowMut<Bytes> for HeaplessByteBuf<N> {
     }
 }
 
-#[cfg(feature = "alloc")]
+#[cfg(any(feature = "std", feature = "alloc"))]
 impl<const N: usize> TryFrom<alloc::vec::Vec<u8>> for HeaplessByteBuf<N> {
     type Error = HeaplessByteBufFullError<N>;
 
@@ -248,7 +248,7 @@ impl<'de, const N: usize> Visitor<'de> for HeaplessByteBufVisitor<N> {
         })
     }
 
-    #[cfg(feature = "alloc")]
+    #[cfg(any(feature = "std", feature = "alloc"))]
     fn visit_byte_buf<E>(self, v: alloc::vec::Vec<u8>) -> Result<HeaplessByteBuf<N>, E>
     where
         E: Error,
