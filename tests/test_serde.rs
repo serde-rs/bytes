@@ -1,6 +1,9 @@
 use serde_bytes::{ByteArray, ByteBuf, Bytes};
 use serde_test::{assert_de_tokens, assert_ser_tokens, assert_tokens, Token};
 
+#[cfg(feature = "heapless")]
+use serde_bytes::HeaplessByteBuf;
+
 #[test]
 fn test_bytes() {
     let empty = Bytes::new(&[]);
@@ -72,4 +75,41 @@ fn test_bytearray() {
     assert_ser_tokens(&bytes, &[Token::Bytes(b"ABC")]);
     assert_ser_tokens(&bytes, &[Token::ByteBuf(b"ABC")]);
     assert_de_tokens(&bytes, &[Token::BorrowedStr("ABC")]);
+}
+
+#[test]
+#[cfg(feature = "heapless")]
+fn test_heapless_byte_buf() {
+    let empty = HeaplessByteBuf::<3>::new();
+    assert_tokens(&empty, &[Token::BorrowedBytes(b"")]);
+    assert_tokens(&empty, &[Token::Bytes(b"")]);
+    assert_tokens(&empty, &[Token::ByteBuf(b"")]);
+    assert_de_tokens(&empty, &[Token::Seq { len: None }, Token::SeqEnd]);
+    assert_de_tokens(&empty, &[Token::Seq { len: Some(0) }, Token::SeqEnd]);
+
+    let buf = HeaplessByteBuf::<3>::try_from(vec![65, 66, 67])
+        .expect("Size of tested `HeaplessByteBuf`to be >= size of test data");
+    assert_tokens(&buf, &[Token::BorrowedBytes(b"ABC")]);
+    assert_tokens(&buf, &[Token::Bytes(b"ABC")]);
+    assert_tokens(&buf, &[Token::ByteBuf(b"ABC")]);
+    assert_de_tokens(
+        &buf,
+        &[
+            Token::Seq { len: None },
+            Token::U8(65),
+            Token::U8(66),
+            Token::U8(67),
+            Token::SeqEnd,
+        ],
+    );
+    assert_de_tokens(
+        &buf,
+        &[
+            Token::Seq { len: Some(3) },
+            Token::U8(65),
+            Token::U8(66),
+            Token::U8(67),
+            Token::SeqEnd,
+        ],
+    );
 }

@@ -4,6 +4,9 @@ use serde::Serializer;
 #[cfg(any(feature = "std", feature = "alloc"))]
 use crate::ByteBuf;
 
+#[cfg(feature = "heapless")]
+use crate::HeaplessByteBuf;
+
 #[cfg(feature = "alloc")]
 use alloc::borrow::Cow;
 #[cfg(all(feature = "std", not(feature = "alloc")))]
@@ -69,8 +72,28 @@ impl<const N: usize> Serialize for ByteArray<N> {
     }
 }
 
+#[cfg(feature = "heapless")]
+impl<const N: usize> Serialize for heapless::Vec<u8, N> {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_bytes(self)
+    }
+}
+
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl Serialize for ByteBuf {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_bytes(self)
+    }
+}
+
+#[cfg(feature = "heapless")]
+impl<const N: usize> Serialize for HeaplessByteBuf<N> {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
