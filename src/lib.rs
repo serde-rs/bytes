@@ -43,6 +43,8 @@
     clippy::ptr_as_ptr
 )]
 
+extern crate serde_core as serde;
+
 mod bytearray;
 mod bytes;
 mod de;

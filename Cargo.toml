@@ -17,11 +17,15 @@ std = ["serde/std"]
 alloc = ["serde/alloc"]
 
 [dependencies]
-serde = { version = "1.0.166", default-features = false }
+serde_core = { version = "1.0.220", default-features = false }
+
+[target.'cfg(any())'.dependencies]
+serde = "1.0.220"
 
 [dev-dependencies]
 bincode = { version = "2", features = ["serde"] }
-serde_derive = "1.0.166"
+serde = "1.0.220"
+serde_derive = "1.0.220"
 serde_test = "1.0.166"
 
 [package.metadata.docs.rs]
