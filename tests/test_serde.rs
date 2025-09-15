@@ -1,3 +1,5 @@
+#![cfg(any(feature = "std", feature = "alloc"))]
+
 use serde_bytes::{ByteArray, ByteBuf, Bytes};
 use serde_test::{assert_de_tokens, assert_ser_tokens, assert_tokens, Token};
 

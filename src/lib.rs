@@ -17,6 +17,7 @@
 //! # use serde_derive::{Deserialize, Serialize};
 //! use serde::{Deserialize, Serialize};
 //!
+//! # #[cfg(any(feature = "std", feature = "alloc"))]
 //! #[derive(Deserialize, Serialize)]
 //! struct Efficient<'a> {
 //!     #[serde(with = "serde_bytes")]
@@ -77,6 +78,7 @@ pub use crate::bytebuf::ByteBuf;
 /// # use serde_derive::Serialize;
 /// use serde::Serialize;
 ///
+/// # #[cfg(any(feature = "std", feature = "alloc"))]
 /// #[derive(Serialize)]
 /// struct Efficient<'a> {
 ///     #[serde(with = "serde_bytes")]
@@ -108,6 +110,7 @@ where
 /// # use serde_derive::Deserialize;
 /// use serde::Deserialize;
 ///
+/// # #[cfg(any(feature = "std", feature = "alloc"))]
 /// #[derive(Deserialize)]
 /// struct Packet {
 ///     #[serde(with = "serde_bytes")]

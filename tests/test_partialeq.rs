@@ -1,4 +1,5 @@
 #![allow(clippy::needless_pass_by_value)]
+#![cfg(any(feature = "std", feature = "alloc"))]
 
 use serde_bytes::{ByteArray, ByteBuf, Bytes};
 
