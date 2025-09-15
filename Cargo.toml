@@ -13,14 +13,14 @@ rust-version = "1.68"
 
 [features]
 default = ["std"]
-std = ["serde/std"]
-alloc = ["serde/alloc"]
+std = ["serde_core/std"]
+alloc = ["serde_core/alloc"]
 
 [dependencies]
 serde_core = { version = "1.0.220", default-features = false }
 
 [target.'cfg(any())'.dependencies]
-serde = "1.0.220"
+serde = { version = "1.0.220", default-features = false }
 
 [dev-dependencies]
 bincode = { version = "2", features = ["serde"] }
