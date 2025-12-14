@@ -5,6 +5,7 @@ use core::convert::TryInto as _;
 use core::fmt::{self, Debug};
 use core::hash::{Hash, Hasher};
 use core::ops::{Deref, DerefMut};
+use core::ptr;
 
 use serde::de::{Deserialize, Deserializer, Error, SeqAccess, Visitor};
 use serde::ser::{Serialize, Serializer};
@@ -53,7 +54,7 @@ impl<const N: usize> ByteArray<N> {
     }
 
     fn from_ref(bytes: &[u8; N]) -> &Self {
-        unsafe { &*(bytes as *const [u8; N]).cast::<ByteArray<N>>() }
+        unsafe { &*ptr::addr_of!(*bytes).cast::<ByteArray<N>>() }
     }
 }
 
