@@ -1,7 +1,6 @@
 use crate::Bytes;
 use core::borrow::{Borrow, BorrowMut};
 use core::cmp::Ordering;
-use core::convert::TryInto as _;
 use core::fmt::{self, Debug};
 use core::hash::{Hash, Hasher};
 use core::ops::{Deref, DerefMut};
