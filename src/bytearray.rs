@@ -53,7 +53,7 @@ impl<const N: usize> ByteArray<N> {
     }
 
     fn from_ref(bytes: &[u8; N]) -> &Self {
-        unsafe { &*(bytes as *const [u8; N] as *const ByteArray<N>) }
+        unsafe { &*(bytes as *const [u8; N]).cast::<ByteArray<N>>() }
     }
 }
 
